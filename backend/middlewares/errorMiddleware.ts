@@ -2,14 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import HTTPException from "../exceptions/http.exception";
 
 const errorMiddleware = (
-	error:Error,
+	error: Error,
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
 		if (error instanceof HTTPException) {
-			const respBody = { message: error.message };
+			const respBody = { error: error.message };
 			res.status(error.statusCode).json(respBody);
 		} else {
 			res.status(500).send({ error: error.message });
