@@ -3,6 +3,7 @@ import express from "express";
 
 import dataSource from "./db/dataSource";
 import LoggerService from "./services/logger.service";
+import userRouter from "./routes/user.route";
 
 const PORT = 3000;
 
@@ -17,6 +18,9 @@ server.use(express.json());
 server.get("/health", (req, res) => {
   res.status(200).json({ message: "Server is healthy" });
 });
+
+// Import routes
+server.use("/users", userRouter);
 
 (async () => {
   try {
