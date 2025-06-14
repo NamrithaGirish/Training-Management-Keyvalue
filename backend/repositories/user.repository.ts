@@ -7,7 +7,7 @@ export default class UserRepository {
   async findOneByUsername(username: string): Promise<User | null> {
     return this.repository.findOne({
       where: { username },
-      select: ["id", "name", "username", "email", "isAdmin"],
+      select: ["id", "name", "username", "email", "isAdmin", "password"],
     });
   }
 
