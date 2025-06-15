@@ -5,11 +5,11 @@ import "dotenv/config";
 
 const dataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  port: Number(process.env.DB_PORT),
-  database: process.env.DB_NAME,
+  host: "localhost",
+  username: "user",
+  password: "password",
+  port: 5433,
+  database: "training_management",
   extra: {
     max: 5,
     min: 2,
