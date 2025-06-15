@@ -92,4 +92,12 @@ export default class UserService {
     const count = await this.userRepository.countUsers();
     return count;
   }
+
+  async findOneByUsername(username: string) : Promise<User | null>{
+    const user = await this.userRepository.findOneByUsername(username);
+    if (!user) {
+      throw new Error("Invalid username");
+    }
+    return user;
+  }
 }
