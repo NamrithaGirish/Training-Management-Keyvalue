@@ -1,43 +1,66 @@
 import {
-	IsString,
-	IsNotEmpty,
-	IsOptional,
-	IsDateString,
-	IsNumber,
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsDateString,
+  IsNumber,
+  IsUrl,
 } from "class-validator";
 
 export class CreateAssignmentDto {
-	@IsString()
-	@IsNotEmpty()
-	title: string;
+  @IsString()
+  @IsNotEmpty()
+  title: string;
 
-	@IsString()
-	@IsOptional()
-	description?: string;
+  @IsString()
+  @IsOptional()
+  description?: string;
 
-	@IsDateString()
-	@IsNotEmpty()
-	dueDate: Date;
+  @IsString()
+  @IsOptional()
+  referenceUrl?: string;
 
-	@IsNumber()
-	@IsNotEmpty()
-	sessionId: number;
+  @IsDateString()
+  @IsNotEmpty()
+  dueDate: Date;
+
+  @IsNumber()
+  @IsNotEmpty()
+  sessionId: number;
 }
 
 export class UpdateAssignmentDto {
-	@IsString()
-	@IsOptional()
-	title?: string;
+  @IsString()
+  @IsOptional()
+  title?: string;
 
-	@IsString()
-	@IsOptional()
-	description?: string;
+  @IsString()
+  @IsOptional()
+  description?: string;
 
-	@IsDateString()
-	@IsOptional()
-	dueDate?: string;
+  @IsString()
+  @IsOptional()
+  referenceUrl?: string;
 
-	@IsNumber()
-	@IsOptional()
-	sessionId?: number;
+  @IsDateString()
+  @IsOptional()
+  dueDate?: string;
+
+  @IsNumber()
+  @IsOptional()
+  sessionId?: number;
+}
+
+export class AssignmentSubmissionDto {
+  @IsNotEmpty()
+  @IsDateString()
+  completedOn: Date;
+
+  @IsNotEmpty()
+  @IsUrl()
+  completionLink: string;
+
+  @IsNotEmpty()
+  @IsUrl()
+  file: string;
 }
