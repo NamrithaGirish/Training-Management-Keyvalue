@@ -1,7 +1,8 @@
-import { Column, Entity,JoinColumn,ManyToOne, Timestamp } from "typeorm";
+import { Column, Entity,JoinColumn,ManyToOne, OneToMany, Timestamp } from "typeorm";
 
 import AbstractBaseEntity from "./abstract.entity";
 import { Program } from "./program.enity";
+import { Assignment } from "./assignment.entity";
 
 export enum Status{
 Draft="Draft",
@@ -41,6 +42,9 @@ export class Session extends AbstractBaseEntity {
   @Column({ type: 'text' })
   sessionFeedback: string;
 
+  @OneToMany(() => Assignment, (assignments) => assignments.session, {
+	})
+  assignments: Assignment[];
   
 }
 
