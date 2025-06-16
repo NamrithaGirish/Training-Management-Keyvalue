@@ -38,7 +38,11 @@ export default function validRoles(allowedRoles: string[]) {
     res: Response,
     next: NextFunction
   ) {
-    const id = req.user.id; // TODO: Extend Request to include user details too
+    if (!req.user) {
+      throw new HTTPException(401, "No such user");
+    }
+
+    const id = req.user.id;
     const sessionId = parseInt(req.params.sessionId, 10) || null; // will only be present in some session endpoints. null otherwise
     if (!(await checkAccess(allowedRoles, id, sessionId))) {
       throw new HTTPException(403, "Forbidden");
