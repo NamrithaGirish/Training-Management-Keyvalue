@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, Check, ManyToOne } from "typeorm";
+import { Entity, Column, Check, ManyToOne } from "typeorm";
 import { User } from "./user.entity";
 import AbstractBaseEntity from "./abstract.entity";
 import { Session } from "./session.entity";
@@ -11,10 +11,14 @@ export enum FeedbackType {
 @Check(`"rating" >= 0 AND "rating" <= 10`)
 @Entity("feedback")
 export class Feedback extends AbstractBaseEntity {
-	@Column()
+	@ManyToOne(() => User, (from) => from.sentFeedbacks, {
+		onDelete: "CASCADE",
+	})
 	from: User;
 
-	@Column()
+	@ManyToOne(() => User, (from) => from.receivedFeedbacks, {
+		onDelete: "CASCADE",
+	})
 	to: User;
 
 	@ManyToOne(() => Session, (session) => session.feedbacks, {
