@@ -5,18 +5,15 @@ export class FeedbackRepository {
 	constructor(private repository: Repository<Feedback>) {}
 
 	async create(data: Feedback): Promise<Feedback> {
-		return this.repository.save(data);
+		return await this.repository.save(data);
 	}
 
 	async getById(id: number): Promise<Feedback | null> {
-		return this.repository.findOne({ where: { id } });
+		return await this.repository.findOne({ where: { id } });
 	}
 
-	async update(
-		id: number,
-		data: Partial<Omit<Feedback, "id">>
-	): Promise<Feedback | undefined> {
-		return this.repository.save({ id, ...data });
+	async update(id: number, data: Feedback): Promise<Feedback | null> {
+		return await this.repository.save({ id, ...data });
 	}
 
 	async delete(id: number): Promise<void> {

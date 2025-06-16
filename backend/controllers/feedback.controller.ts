@@ -1,16 +1,38 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, Router } from "express";
 import { FeedbackService } from "../services/feedback.service";
 import { Feedback } from "../entities/feedback.entity";
 import HTTPException from "../exceptions/http.exception";
+import { plainToInstance } from "class-transformer";
+import { CreateFeedbackDto, UpdateFeedbackDto } from "../dto/feedback.dto";
+import { validate } from "class-validator";
+import LoggerService from "../services/logger.service";
 
 export class FeedbackController {
+	private logger = LoggerService.getInstance(FeedbackController.name);
+
 	//TO_DO: Add validation and error handling
-	constructor(private feedbackService: FeedbackService) {}
+	constructor(
+		private feedbackService: FeedbackService,
+		feedbackRouter: Router
+	) {
+		feedbackRouter.post("/", this.createFeedback.bind(this));
+		feedbackRouter.get("/", this.getAllFeedbacks.bind(this));
+		feedbackRouter.get("/:id", this.getFeedbackById.bind(this));
+		feedbackRouter.patch("/:id", this.updateFeedback.bind(this));
+		feedbackRouter.delete("/:id", this.deleteFeedback.bind(this));
+	}
 
 	async createFeedback(req: Request, res: Response, next: NextFunction) {
 		try {
+			const data = req.body;
+			const createFeedbackDto = plainToInstance(CreateFeedbackDto, data);
+			const err = await validate(createFeedbackDto);
+			if (err.length > 0) {
+				this.logger.error("Validation failed" + err);
+				throw new HTTPException(400, "Validation failed");
+			}
 			const feedback = await this.feedbackService.createFeedback(
-				req.body
+				createFeedbackDto
 			);
 			res.status(201).json(feedback);
 		} catch (error) {
@@ -43,8 +65,14 @@ export class FeedbackController {
 	async updateFeedback(req: Request, res: Response, next: NextFunction) {
 		try {
 			const id: number = parseInt(req.params.id);
-			const body: Feedback = req.body;
-			const updated = await this.feedbackService.updateFeedback(id, body);
+			const data= req.body;
+			const updateFeedbackDto = plainToInstance(UpdateFeedbackDto, data);
+			const err = await validate(updateFeedbackDto);
+			if (err.length > 0) {
+				this.logger.error("Validation failed" + err);
+				throw new HTTPException(400, "Validation failed");
+			}
+			const updated = await this.feedbackService.updateFeedback(id, updateFeedbackDto);
 			if (!updated) {
 				return res.status(404).json({ message: "Feedback not found" });
 			}
