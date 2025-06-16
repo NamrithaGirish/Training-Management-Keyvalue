@@ -9,7 +9,6 @@ import errorMiddleware from "./middlewares/errorMiddleware";
 import authMiddleware from "./middlewares/auth.middleware";
 import sessionRouter from "./routes/session.routes";
 import trainingRouter from "./routes/training.route";
-import programRouter from "./routes/program.route";
 
 const PORT = 3000;
 
