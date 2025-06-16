@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
 
 import AbstractBaseEntity from "./abstract.entity";
+<<<<<<< HEAD
 import { Feedback } from "./feedback.entity";
 
 @Entity()
@@ -25,4 +26,27 @@ export class User extends AbstractBaseEntity {
 
 	@OneToMany(() => Feedback, (feedback) => feedback.to, {})
 	sentFeedbacks: Feedback[];
+=======
+import { UserSession } from "./userSession.entity";
+
+@Entity()
+export class User extends AbstractBaseEntity {
+  @Column()
+  name: string;
+
+  @Column({ unique: true })
+  username: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ select: false }) // Password should not be show up on SELECT queries unless explicitly requested
+  password: string;
+
+  @Column({ default: false })
+  isAdmin: boolean;
+  @OneToMany(() => UserSession, (userSession) => userSession.user)
+  userSessions: UserSession[]; 
+  
+>>>>>>> 9fefb53 (update head)
 }
