@@ -2,10 +2,12 @@ import { AssignmentRepository } from "../repositories/assignment.repository";
 import { Assignment } from "../entities/assignment.entity";
 
 export class AssignmentService {
+	async getAssignments() {
+		throw new Error("Method not implemented.");
+	}
 	constructor(private assignmentRepository: AssignmentRepository) {}
 
 	async createAssignment(assignment: Assignment): Promise<Assignment> {
-		//TODO: Validate session id before creating
 		return this.assignmentRepository.create(assignment);
 	}
 
@@ -22,7 +24,6 @@ export class AssignmentService {
 		data: Partial<Assignment>
 	): Promise<Assignment | null> {
 		const existingAssignment = await this.assignmentRepository.getById(id);
-		//TODO: Validate session id if updating session id
 		if (!existingAssignment) {
 			throw new Error(`Assignment with id ${id} not found`);
 		}

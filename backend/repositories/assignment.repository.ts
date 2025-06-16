@@ -1,5 +1,6 @@
 import { Repository } from "typeorm";
 import { Assignment } from "../entities/assignment.entity";
+import { Session } from "../entities/session.entity";
 
 export class AssignmentRepository {
 	constructor(private repository: Repository<Assignment>) {}
@@ -27,11 +28,11 @@ export class AssignmentRepository {
 		await this.repository.delete({ id });
 	}
 
-	// async getBySessionId(session: Session): Promise<Assignment[]> {
-	// 	return this.repository.find({ where: { session } });
-	// }
+	async getBySessionId(session: Session): Promise<Assignment[]> {
+		return this.repository.find({ where: { session } });
+	}
 
-	// async getCountBySessionId(session: Session): Promise<number> {
-	// 	return this.repository.count({ where: { session } });
-	// }
+	async getCountBySessionId(session: Session): Promise<number> {
+		return this.repository.count({ where: { session } });
+	}
 }
