@@ -1,10 +1,11 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import AbstractBaseEntity from "./abstract.entity";
 import { Session } from "./session.entity";
-import { UserSession } from "./user-session.entity";
+import { TrainingUser } from "./training-users.entity";
+
 
 @Entity()
-export class Program extends AbstractBaseEntity {
+export class Training extends AbstractBaseEntity {
   @Column()
   title: string;
 
@@ -12,14 +13,14 @@ export class Program extends AbstractBaseEntity {
   description: string;
 
   @Column({ type: "date" })
-  start_date: Date;
+  startDate: Date;
 
   @Column({ type: "date" })
-  end_date: Date;
+  endDate: Date;
 
-  @OneToMany(() => Session, (session) => session.program)
+  @OneToMany(() => Session, (session) => session.training)
   sessions: Session[];
 
-  @OneToMany(() => UserSession, (userSession) => userSession.session)
-  userSessions: UserSession[];
+  @OneToMany(() => TrainingUser, (trainingUser) => trainingUser.training)
+  members: TrainingUser[]; 
 }

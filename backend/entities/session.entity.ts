@@ -1,31 +1,30 @@
 
 import { Column, Entity,JoinColumn,ManyToOne, OneToMany, Timestamp } from "typeorm";
 import AbstractBaseEntity from "./abstract.entity";
-import { Program } from "./program.enity";
+
 import { Assignment } from "./assignment.entity";
 import { Feedback } from "./feedback.entity";
 import { UserSession } from "./user-session.entity";
 import { Material } from "./material.entity";
+import { Training } from "./training.entity";
 
-export enum Status{
-Draft="Draft",
-Scheduled="Scheduled",
-InProgress="InProgress",
-Completed="Completed"
-
+export enum Status {
+  Draft = "Draft",
+  Scheduled = "Scheduled",
+  InProgress = "InProgress",
+  Completed = "Completed",
 }
 
 
 @Entity()
 export class Session extends AbstractBaseEntity {
-
   @Column()
   title: string;
 
-  @ManyToOne(() => Program, (program) => program.sessions)
-  program: Program;
+  @ManyToOne(() => Training, (training) => training.sessions)
+  training: Training;
 
-  @Column({nullable:true})
+  @Column()
   description: string;
 
   @Column({ default: "Draft" as Status })
@@ -34,11 +33,11 @@ export class Session extends AbstractBaseEntity {
   @Column({nullable:true})
   preReq: string;
 
-  @Column({type:'timestamp'})
-  startTime:Date;
+  @Column({ type: "timestamp" })
+  startTime: Date;
 
-  @Column({type:'timestamp'})
-  endTime:Date;
+  @Column({ type: "timestamp" })
+  endTime: Date;
 
   @Column({ type: 'text' ,nullable:true})
   materialQualityFeedback?: string;
