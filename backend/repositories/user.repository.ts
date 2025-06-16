@@ -46,4 +46,5 @@ export default class UserRepository {
   async countUsers(): Promise<number> {
     return this.repository.count();
   }
+  
 }

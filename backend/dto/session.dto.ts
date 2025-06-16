@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsOptional,
   IsEnum,
+  IsNumber,
 } from "class-validator";
 import { Status } from "../entities/session.entity";
 
@@ -11,6 +12,10 @@ export class CreateSessionDto {
   @IsNotEmpty()
   @IsString()
   title: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  program_id:number
 
   @IsOptional()
   @IsString()
@@ -33,9 +38,14 @@ export class CreateSessionDto {
 }
 
 export class UpdateSessionDto{
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   title?: string;
+
+  @IsOptional()
+  @IsNumber()
+  program_id?:number
+
 
   @IsOptional()
   @IsString()
@@ -45,14 +55,16 @@ export class UpdateSessionDto{
   @IsString()
   preReq?: string;
 
+
+  @IsOptional()
   @IsEnum(Status)
   status?:Status
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   startTime?:Date;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsDateString()
   endTime?:Date;
 

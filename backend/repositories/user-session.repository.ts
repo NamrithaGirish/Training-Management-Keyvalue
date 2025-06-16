@@ -1,12 +1,12 @@
 import { Repository } from "typeorm";
-import { UserSession } from "../entities/userSession.entity";
+import { UserSession } from "../entities/user-session.entity";
 import { Session } from "../entities/session.entity";
 import { User } from "../entities/user.entity";
 
 export class UserSessionRepository {
   constructor(private repository: Repository<UserSession>) {}
 
-  async create(userSession: UserSession): Promise<UserSession> {
+  async addUserToSession(userSession: UserSession): Promise<UserSession> {
     return this.repository.save(userSession);
   }
 
