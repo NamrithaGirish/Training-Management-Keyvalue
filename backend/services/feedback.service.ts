@@ -116,7 +116,7 @@ export class FeedbackService {
 		if (!session) {
 			throw new Error(`Invalid session ID`);
 		}
-		return this.feedbackRepository.getBySession(session);
+		return this.feedbackRepository.getBySession(sessionId);
 	}
 	async getFeedbackBySessionAndType(
 		type: FeedbackType,
@@ -126,6 +126,6 @@ export class FeedbackService {
 		if (!session) {
 			throw new Error(`Invalid session ID`);
 		}
-		return this.feedbackRepository.getBySessionAndType(type, session);
+		return this.feedbackRepository.getBySessionAndType(type, sessionId);
 	}
 }

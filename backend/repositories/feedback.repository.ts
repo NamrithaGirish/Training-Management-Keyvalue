@@ -61,10 +61,10 @@ export class FeedbackRepository {
 		});
 	}
 
-	async getBySession(session: Session): Promise<Feedback[]> {
-		console.log("session to get feedback", session.id);
+	async getBySession(sessionId: number): Promise<Feedback[]> {
+		// console.log("session to get feedback", session.id);
 		const feedbacks = await this.repository.find({
-			where: { session: session },
+			where: { session: { id: sessionId } },
 			relations: {
 				from: true,
 				to: true,
@@ -77,10 +77,10 @@ export class FeedbackRepository {
 
 	async getBySessionAndType(
 		type: FeedbackType,
-		session: Session
+		sessionId: number
 	): Promise<Feedback[]> {
 		return await this.repository.find({
-			where: { type, session },
+			where: { type, session: { id: sessionId } },
 			relations: {
 				from: true,
 				to: true,
