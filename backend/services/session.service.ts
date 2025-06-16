@@ -1,5 +1,4 @@
-import { FeedbackRepository } from "../repositories/feedback.repository";
-import { Feedback } from "../entities/feedback.entity";
+
 import SessionRepository from "../repositories/session.repository";
 import { Session } from "../entities/session.entity";
 import { instanceToPlain, plainToInstance } from "class-transformer";
