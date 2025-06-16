@@ -4,8 +4,6 @@ import TrainingRepository from "../repositories/training.repository";
 import TrainingService from "../services/training.service";
 import TrainingController from "../controllers/training.controller";
 
-
-
 const trainingRepository = new TrainingRepository(
   dataSource.getRepository("Training")
 );
@@ -20,7 +18,7 @@ trainingRouter.get(
 );
 trainingRouter.get(
   "/:id",
-  trainingController.getTrainingDetails.bind(trainingController)
+  trainingController.getTrainings.bind(trainingController)
 );
 trainingRouter.post(
   "/",
@@ -35,14 +33,14 @@ trainingRouter.delete(
   trainingController.deleteTraining.bind(trainingController)
 );
 
-// trainingRouter.post(
-//   "/:id/members",
-//   trainingController.addMembers.bind(trainingController)
-// );
-// trainingRouter.delete(
-//   "/:id/members",
-//   trainingController.removeMembers.bind(trainingController)
-// );
+trainingRouter.post(
+  "/:id/members",
+  trainingController.addMembers.bind(trainingController)
+);
+trainingRouter.delete(
+  "/:id/members",
+  trainingController.removeMembers.bind(trainingController)
+);
 
 export default trainingRouter;
 export { trainingController, trainingService, trainingRepository };

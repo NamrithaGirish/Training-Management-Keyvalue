@@ -5,7 +5,7 @@ export default class TrainingService {
   constructor(private trainingRepository: TrainingRepository) {}
 
   async getAllTrainings(userId?: number) {
-    if (userId) return this.trainingRepository.findTrainingsByUser(userId);
+    if (userId) return this.trainingRepository.findOneById(userId);
     return this.trainingRepository.findAll();
   }
 
@@ -35,4 +35,11 @@ export default class TrainingService {
   // async removeMember(trainingId: number, userId: number) {
   //   return this.trainingRepository.removeMember(trainingId, userId);
   // }
+  addMembers(trainingId: number, members: { userId: number; role: string }[]) {
+    return this.trainingRepository.addMembers(trainingId, members);
+  }
+
+  removeMembers(trainingId: number, userIds: number[]) {
+    return this.trainingRepository.removeMembers(trainingId, userIds);
+  }
 }

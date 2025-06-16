@@ -7,9 +7,8 @@ export default class TrainingController {
 
   async getTrainings(req: Request, res: Response, next: NextFunction) {
     try {
-      const userId = req.query.userId
-        ? parseInt(req.query.userId as string)
-        : undefined;
+      const userId = req.params.id ? parseInt(req.params.id) : undefined;
+      console.log("userId : ", userId);
       const trainings = await this.trainingService.getAllTrainings(userId);
       res.status(200).json(trainings);
     } catch (err) {
@@ -82,4 +81,16 @@ export default class TrainingController {
   //     next(err);
   //   }
   // }
+  async addMembers(req: Request, res: Response) {
+    const members = await this.trainingService.addMembers(
+      +req.params.id,
+      req.body.members
+    );
+    return res.status(201).json(members);
+  }
+
+  async removeMembers(req: Request, res: Response) {
+    await this.trainingService.removeMembers(+req.params.id, req.body.userIds);
+    return res.status(204).send();
+  }
 }

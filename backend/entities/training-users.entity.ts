@@ -5,10 +5,12 @@ import {
   Column,
   Unique,
 } from "typeorm";
-import { User } from "./user.entity";
+
 
 import AbstractBaseEntity from "./abstract.entity";
 import { Training } from "./training.entity";
+import { User } from "./user.entity";
+// import { User } from "./user.entity";
 
 export enum TrainingUserRole {
   CANDIDATE = "candidate",

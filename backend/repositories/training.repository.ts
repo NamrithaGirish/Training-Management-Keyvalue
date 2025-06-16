@@ -1,5 +1,9 @@
 import { Repository } from "typeorm";
 import { Training } from "../entities/training.entity";
+import {
+  TrainingUser,
+  TrainingUserRole,
+} from "../entities/training-users.entity";
 // import { TrainingMember } from "../entities/training-member.entity";
 
 export default class TrainingRepository {
@@ -12,7 +16,7 @@ export default class TrainingRepository {
   findTrainingsByUser(userId: number) {
     return this.trainingRepo
       .createQueryBuilder("training")
-      .leftJoin("training.members", "member")
+      .leftJoin("training.user", "member")
       .where("member.user.id = :userId", { userId })
       .getMany();
   }
@@ -57,4 +61,29 @@ export default class TrainingRepository {
   //       .getRepository(TrainingMember)
   //       .delete({ training: { id: trainingId }, user: { id: userId } });
   //   }
+  async addMembers(
+    trainingId: number,
+    members: { userId: number; role: string }[]
+  ) {
+    const insertValues = members.map((m) => ({
+      training: { id: trainingId },
+      user: { id: m.userId },
+      role: m.role as TrainingUserRole,
+    }));
+
+    return this.trainingRepo.manager
+      .getRepository(TrainingUser)
+      .save(insertValues);
+  }
+
+  async removeMembers(trainingId: number, userIds: number[]) {
+    const trainingUserRepo =
+      this.trainingRepo.manager.getRepository(TrainingUser);
+    return trainingUserRepo.delete(
+      userIds.map((userId) => ({
+        training: { id: trainingId },
+        user: { id: userId },
+      }))
+    );
+  }
 }
