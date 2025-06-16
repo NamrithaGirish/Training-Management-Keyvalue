@@ -8,6 +8,7 @@ import authRouter from "./routes/auth.routes";
 import errorMiddleware from "./middlewares/errorMiddleware";
 import authMiddleware from "./middlewares/auth.middleware";
 import sessionRouter from "./routes/session.routes";
+import trainingRouter from "./routes/training.route";
 
 const PORT = 3000;
 
@@ -27,6 +28,7 @@ server.get("/health", (req, res) => {
 server.use("/auth", authRouter);
 server.use("/users", userRouter);
 server.use("/session",sessionRouter)
+server.use("/trainings", trainingRouter);
 server.use(errorMiddleware);
 
 (async () => {
