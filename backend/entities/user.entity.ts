@@ -27,9 +27,6 @@ export class User extends AbstractBaseEntity {
   @OneToMany(() => Feedback, (feedback) => feedback.to, {})
   sentFeedbacks: Feedback[];
 
-  @OneToMany(() => UserSession, (userSession) => userSession.user)
-  userSessions: UserSession[];
-
   @OneToMany(
     () => AssignmentSubmission,
     (assignmentSubmission) => assignmentSubmission.user
