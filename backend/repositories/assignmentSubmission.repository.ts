@@ -7,4 +7,13 @@ export default class AssignmentSubmissionRepository {
   async submitAssignment(submission: AssignmentSubmission): Promise<void> {
     this.repository.save(submission);
   }
+
+  async getSubmissionsByAssignmentId(
+    assignmentId: number
+  ): Promise<AssignmentSubmission[]> {
+    return this.repository.find({
+      where: { assignment: { id: assignmentId } },
+      relations: ["user", "assignment"],
+    });
+  }
 }
