@@ -63,8 +63,9 @@ const EventList: React.FC<EventListProps> = ({
     const [searchTerm, setSearchTerm] = useState("");
     const filteredData = (data || []).filter(
         (item) =>
-            (item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                (statusFilter.toLowerCase() == "all" || item.status === statusFilter))
+            item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (statusFilter.toLowerCase() == "all" ||
+                item.status === statusFilter)
     );
     return (
         <div className=" text-white w-full">
@@ -114,9 +115,15 @@ const EventList: React.FC<EventListProps> = ({
                 </div>
 
                 <div className="space-y-4 w-full">
-                    {filteredData.map((item, index) => (
-                        <EventListItem key={index} item={item} />
-                    ))}
+                    {filteredData.length === 0 ? (
+                        <p className="text-center text-gray-500 w-full border-2 border-borderColor py-10">
+                            No programs found
+                        </p>
+                    ) : (
+                        filteredData.map((item, index) => (
+                            <EventListItem key={index} item={item} />
+                        ))
+                    )}
                 </div>
             </div>
         </div>

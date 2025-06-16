@@ -21,11 +21,11 @@ const NavbarItem = ({
 const Navbar = () => {
     return (
         <nav
-            className={`fixed top-headerHeight -translate-x-2px left-0 bottom-0 w-navbarWidth h-full bg-cardColor text-white shadow-lg py-8 z-40 border-2 border-borderColor`}
+            className={`fixed top-headerHeight -translate-y-2px left-0 bottom-0 w-navbarWidth h-full bg-cardColor text-white shadow-lg py-8 z-40 border-2 border-borderColor border-t-transparent`}
         >
             <ul className="space-y-4">
-                <NavbarItem label="Dashboard" icon="🏠" />
-                <NavbarItem label="Dashboard" icon="🏠" />
+                <NavbarItem label="Training" icon="🏠" />
+                <NavbarItem label="Upcoming Sessions" icon="🏠" />
             </ul>
         </nav>
     );

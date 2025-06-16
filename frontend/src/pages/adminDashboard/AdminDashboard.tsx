@@ -31,14 +31,14 @@ const AdminDashboard = () => {
                             duration: "3 days",
                             status: "Active",
                             totalSessions: 7,
-                            progress: 90,
+                            progress: 30,
                         },
                         {
                             title: "Bhagya",
                             description:
                                 "A short one line description about the program",
                             duration: "3 days",
-                            status: "Completed",
+                            status: "Active",
                             totalSessions: 7,
                             progress: 90,
                         },
