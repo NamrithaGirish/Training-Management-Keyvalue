@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import AbstractBaseEntity from "./abstract.entity";
-import { Session } from "./session.entity"
+import { Session } from "./session.entity";
+import { UserSession } from "./userSession.entity";
 
 @Entity()
 export class Program extends AbstractBaseEntity {
@@ -19,4 +20,6 @@ export class Program extends AbstractBaseEntity {
   @OneToMany(() => Session, (session) => session.program)
   sessions: Session[];
 
+  @OneToMany(() => UserSession, (userSession) => userSession.session)
+  userSessions: UserSession[];
 }

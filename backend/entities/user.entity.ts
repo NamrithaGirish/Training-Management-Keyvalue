@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
-
 import AbstractBaseEntity from "./abstract.entity";
 import { Feedback } from "./feedback.entity";
+import { UserSession } from "./userSession.entity";
 
 @Entity()
 export class User extends AbstractBaseEntity {
@@ -25,4 +25,7 @@ export class User extends AbstractBaseEntity {
 
 	@OneToMany(() => Feedback, (feedback) => feedback.to, {})
 	sentFeedbacks: Feedback[];
+
+  @OneToMany(() => UserSession, (userSession) => userSession.user)
+  userSessions: UserSession[]; 
 }

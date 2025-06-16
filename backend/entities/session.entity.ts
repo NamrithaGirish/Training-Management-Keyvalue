@@ -1,9 +1,11 @@
-import { Column, Entity,JoinColumn,ManyToOne, OneToMany, Timestamp } from "typeorm";
 
+import { Column, Entity,JoinColumn,ManyToOne, OneToMany, Timestamp } from "typeorm";
 import AbstractBaseEntity from "./abstract.entity";
 import { Program } from "./program.enity";
 import { Assignment } from "./assignment.entity";
 import { Feedback } from "./feedback.entity";
+import { UserSession } from "./userSession.entity";
+import { Material } from "./material.entity";
 
 export enum Status{
 Draft="Draft",
@@ -13,20 +15,21 @@ Completed="Completed"
 
 }
 
+
 @Entity()
-export class Session extends AbstractBaseEntity {  
+export class Session extends AbstractBaseEntity {
+
   @Column()
   title: string;
 
   @ManyToOne(() => Program, (program) => program.sessions)
   program: Program;
-  
 
   @Column()
-  description:string;
+  description: string;
 
-  @Column({default:"Draft" as Status})
-  status:Status
+  @Column({ default: "Draft" as Status })
+  status: Status;
 
   @Column()
   preReq: string;
@@ -37,19 +40,26 @@ export class Session extends AbstractBaseEntity {
   @Column({type:'timestamp'})
   endTime:Date;
 
-  @Column({ type: 'text' })
-  materialQualityFeedback: string;
+  @Column({ type: 'text' ,nullable:true})
+  materialQualityFeedback?: string;
 
-  @Column({ type: 'text' })
-  sessionFeedback: string;
+  @Column({ type: 'text' ,nullable:true})
+  sessionFeedback?: string;
 
   @OneToMany(() => Assignment, (assignments) => assignments.session, {
 	})
-  assignments: Assignment[];
+  assignments?: Assignment[];
 
   @OneToMany(() => Feedback, (feedbacks) => feedbacks.session, {
 	})
-  feedbacks: Feedback[];
+  feedbacks?: Feedback[];
+
+  @OneToMany(() => UserSession, (userSession) => userSession.session)
+  userSessions?: UserSession[];
+
+  @OneToMany(() => Material, (material) => material.session, {
+    cascade: true,
+  })
+  materials?: Material[];
   
 }
-
