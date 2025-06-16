@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import AbstractBaseEntity from "./abstract.entity";
 import { Session } from "./session.entity";
-import { UserSession } from "./userSession.entity";
+import { UserSession } from "./user-session.entity";
 
 @Entity()
 export class Program extends AbstractBaseEntity {

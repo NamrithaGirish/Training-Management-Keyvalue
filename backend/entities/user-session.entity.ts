@@ -20,6 +20,7 @@ export class UserSession extends AbstractBaseEntity{
   session: Session;
 
   @Column({ type: "varchar", length: 100 })
-  role: string; 
+  role: string;
+  
  
 }

@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { Session } from "../entities/session.entity";
 import { User } from "../entities/user.entity";
 import { Material } from "../entities/material.entity";
-import { UserSession } from "../entities/userSession.entity";
+import { UserSession } from "../entities/user-session.entity";
 
 class SessionRepository {
   constructor(private repository: Repository<Session>) {}
