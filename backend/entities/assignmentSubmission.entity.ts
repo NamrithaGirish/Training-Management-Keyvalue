@@ -2,8 +2,10 @@ import { Column, Entity, ManyToOne } from "typeorm";
 import AbstractBaseEntity from "./abstract.entity";
 import { User } from "./user.entity";
 import { Assignment } from "./assignment.entity";
+import { Unique } from "typeorm";
 
 @Entity()
+@Unique(["user", "assignment"])
 export default class AssignmentSubmission extends AbstractBaseEntity {
   @Column()
   completedOn: Date;
