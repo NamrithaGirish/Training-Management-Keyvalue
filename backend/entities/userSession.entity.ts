@@ -21,8 +21,6 @@ export class UserSession extends AbstractBaseEntity{
 
   @Column({ type: "varchar", length: 100 })
   role: string;
-  
-  
 
 
 }

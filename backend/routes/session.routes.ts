@@ -12,7 +12,9 @@ const sessionController=new SessionController(sessionService);
 const sessionRouter=Router();
 
 sessionRouter.post("/", sessionController.createSession.bind(sessionController));
-
-
+sessionRouter.get("/", sessionController.getAllSessions.bind(sessionController));
+sessionRouter.get("/:id", sessionController.getSessionById.bind(sessionController));
+sessionRouter.patch("/:id", sessionController.updateSession.bind(sessionController));
+sessionRouter.delete("/:id", sessionController.deleteSession.bind(sessionController));
 export default sessionRouter;
 export { sessionController, sessionService, sessionRepository};
