@@ -16,6 +16,6 @@ export class Training extends AbstractBaseEntity {
   @Column({ type: "date" })
   endDate: Date;
 
-  @OneToMany(() => Session, (session) => session.Training)
+  @OneToMany(() => Session, (session) => session.training)
   sessions: Session[];
 }
