@@ -3,6 +3,7 @@ import { Column, Entity,JoinColumn,ManyToOne, OneToMany, Timestamp } from "typeo
 import AbstractBaseEntity from "./abstract.entity";
 import { Program } from "./program.enity";
 import { Assignment } from "./assignment.entity";
+import { Feedback } from "./feedback.entity";
 
 export enum Status{
 Draft="Draft",
@@ -45,6 +46,10 @@ export class Session extends AbstractBaseEntity {
   @OneToMany(() => Assignment, (assignments) => assignments.session, {
 	})
   assignments: Assignment[];
+
+  @OneToMany(() => Feedback, (feedbacks) => feedbacks.session, {
+	})
+  feedbacks: Feedback[];
   
 }
 

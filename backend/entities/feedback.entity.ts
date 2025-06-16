@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, Check } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Check, ManyToOne } from "typeorm";
 import { User } from "./user.entity";
 import AbstractBaseEntity from "./abstract.entity";
+import { Session } from "./session.entity";
 
 export enum FeedbackType {
 	ABOUT_TRAINER = "aboutTrainer",
@@ -16,8 +17,10 @@ export class Feedback extends AbstractBaseEntity {
 	@Column()
 	to: User;
 
-	// @Column()
-	// session: Session;
+	@ManyToOne(() => Session, (session) => session.feedbacks, {
+		onDelete: "CASCADE",
+	})
+	session: Session;
 
 	@Column("int")
 	rating: number;
