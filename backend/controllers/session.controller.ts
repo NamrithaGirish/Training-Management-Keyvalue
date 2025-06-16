@@ -70,9 +70,9 @@ export class SessionController {
           });
         }
   
-        const updatedUser = await this.sessionService.updateSession(sessionId, sessionDto);
+        const updatedSession = await this.sessionService.updateSession(sessionId, sessionDto);
   
-        res.status(200).json(updatedUser);
+        res.status(200).json(updatedSession);
       } catch (error) {
         next(error);
       }

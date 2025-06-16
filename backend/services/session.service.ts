@@ -9,11 +9,10 @@ import HTTPException from "../exceptions/http.exception";
 export class SessionService {
     private logger = LoggerService.getInstance("UserService()");
     constructor(private sessionRepository: SessionRepository) {}
-
+ 
 
  async createSession(sessionDto: CreateSessionDto): Promise<Session> {
     const session= plainToInstance(Session, instanceToPlain(sessionDto));
-
     const result = await this.sessionRepository.create(session);
     this.logger.info(`Session created with ID: ${result.id}`);
 
@@ -26,12 +25,12 @@ export class SessionService {
       return sessions;
     }
 
-   async findOneById(id: number) {
-      const user = await this.sessionRepository.findOneById(id);
-      if (!user) {
+   async findOneById(id: number):Promise<Session>{
+      const session = await this.sessionRepository.findOneById(id);
+      if (!session) {
         throw new HTTPException(404, "Session not found");
       }
-      return user;
+      return session;
     }
    async deleteSession(id: number): Promise<void> {
        const user = await this.sessionRepository.findOneById(id);
@@ -54,7 +53,7 @@ export class SessionService {
     
     
         const result = await this.sessionRepository.update(id,sessionData);
-        this.logger.info(`User updated with ID: ${result.id}`);
+        this.logger.info(`Session updated with ID: ${result.id}`);
         return result;
       } 
      
