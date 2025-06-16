@@ -1,5 +1,6 @@
-import { Column, Entity } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 import AbstractBaseEntity from "./abstract.entity";
+import { Session } from "./session.entity"
 
 @Entity()
 export class Program extends AbstractBaseEntity {
@@ -14,4 +15,8 @@ export class Program extends AbstractBaseEntity {
 
   @Column({ type: "date" })
   end_date: Date;
+
+  @OneToMany(() => Session, (session) => session.program)
+  sessions: Session[];
+
 }
