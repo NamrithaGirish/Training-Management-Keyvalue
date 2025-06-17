@@ -1,13 +1,17 @@
+import dayjs from "dayjs";
 import { useState } from "react";
 import { CiPlay1 } from "react-icons/ci";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 type EventProps = {
+    id: number;
     title: string;
     description: string;
-    duration: string;
-    status: string;
+    startDate: string;
+    endDate: string;
+    duration?: string;
+    status?: string;
     trainer?: string;
     totalSessions?: number;
     progress?: number;
@@ -30,18 +34,19 @@ const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
     return (
         <div
             className="border border-gray-700 p-4 rounded-lg bg-cardColor cursor-pointer"
-            onClick={() => navigate(`/${heading}/${item.title}`)}
+            onClick={() => navigate(`/${heading}/${item.id}`)}
         >
             <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold">{item.title}</h3>
-                <span className="text-sm text-green-400 flex items-center gap-1">
+                {/* <span className="text-sm text-green-400 flex items-center gap-1">
                     <CiPlay1 />
                     <p>{item.status}</p>
-                </span>
+                </span> */}
             </div>
             <div className="flex flex-col gap-1 mt-2">
                 <p className="text-sm mt-1 text-gray-400">{item.description}</p>
-                <p className="text-sm mt-1">Time duration : {item.duration}</p>
+                <p className="text-sm mt-1">Start date : {dayjs(item.startDate).format('DD/MM/YYYY')}</p>
+                <p className="text-sm mt-1">End date : {dayjs(item.endDate).format('DD/MM/YYYY')}</p>
                 {item.trainer && (
                     <p className="text-sm mt-1">Trainer : {item.trainer}</p>
                 )}
@@ -74,6 +79,8 @@ const EventList: React.FC<EventListProps> = ({
 }) => {
     const [statusFilter, setStatusFilter] = useState("Active");
     const [searchTerm, setSearchTerm] = useState("");
+    if(!data)
+        return (<></>);
     const filteredData = (data || []).filter(
         (item) =>
             item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&

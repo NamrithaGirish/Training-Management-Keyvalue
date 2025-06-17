@@ -106,7 +106,7 @@ const LoginForm = () => {
             .catch((error) => {
                 console.log(error);
                 setSigninData({ username: "", password: "" });
-                navigate("/login");
+                navigate("/");
             });
     };
 
@@ -115,6 +115,7 @@ const LoginForm = () => {
             <LoginFormSection type="signup">
                 <LoginInput
                     name="name"
+                    id="name"
                     placeholder="Name"
                     value={signupData.name}
                     onChange={(event) =>
@@ -126,6 +127,7 @@ const LoginForm = () => {
                 />
                 <LoginInput
                     name="email"
+                    id="email"
                     placeholder="Email"
                     value={signupData.email}
                     onChange={(event) =>
@@ -137,6 +139,7 @@ const LoginForm = () => {
                 />
                 <LoginInput
                     name="password"
+                    id="new-password"
                     type="password"
                     placeholder="Password"
                     value={signupData.password}
@@ -152,6 +155,7 @@ const LoginForm = () => {
             <LoginFormSection type="signin" onClick={handleLogin}>
                 <LoginInput
                     name="username"
+                    id="username"
                     placeholder="Username"
                     value={signinData.username}
                     onChange={(event) =>
@@ -163,6 +167,7 @@ const LoginForm = () => {
                 />
                 <LoginInput
                     name="password"
+                    id="password"
                     type="password"
                     placeholder="Password"
                     value={signinData.password}
