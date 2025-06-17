@@ -13,9 +13,16 @@ export default class TrainingService {
     return this.trainingRepository.findOneById(id);
   }
 
-  async createTraining(trainingDto: Partial<Training>) {
-    return this.trainingRepository.saveTraining(trainingDto);
+ 
+  async createTraining(trainingDto: Partial<Training> & { members?: { userId: number; role: string }[] }) {
+  const { members, ...trainingData } = trainingDto;
+  const training = await this.trainingRepository.saveTraining(trainingData);
+  if (members && members.length > 0) {
+    await this.trainingRepository.addMembers(training.id, members);
   }
+  return training;
+}
+
 
   async updateTraining(id: number, trainingDto: Partial<Training>) {
     return this.trainingRepository.updateTraining(id, trainingDto);
@@ -25,16 +32,6 @@ export default class TrainingService {
     return this.trainingRepository.deleteTraining(id);
   }
 
-  // async addMembers(
-  //   trainingId: number,
-  //   members: { userId: number; role: string }[]
-  // ) {
-  //   return this.trainingRepository.addMembers(trainingId, members);
-  // }
-
-  // async removeMember(trainingId: number, userId: number) {
-  //   return this.trainingRepository.removeMember(trainingId, userId);
-  // }
   addMembers(trainingId: number, members: { userId: number; role: string }[]) {
     return this.trainingRepository.addMembers(trainingId, members);
   }

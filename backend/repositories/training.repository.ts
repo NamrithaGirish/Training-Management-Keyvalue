@@ -41,26 +41,6 @@ export default class TrainingRepository {
     return this.trainingRepo.delete(id);
   }
 
-  //   async addMembers(
-  //     trainingId: number,
-  //     members: { userId: number; role: string }[]
-  //   ) {
-  //     const insertValues = members.map((m) => ({
-  //       training: { id: trainingId },
-  //       user: { id: m.userId },
-  //       role: m.role,
-  //     }));
-
-  //     return this.trainingRepo.manager
-  //       .getRepository(TrainingMember)
-  //       .save(insertValues);
-  //   }
-
-  //   async removeMember(trainingId: number, userId: number) {
-  //     return this.trainingRepo.manager
-  //       .getRepository(TrainingMember)
-  //       .delete({ training: { id: trainingId }, user: { id: userId } });
-  //   }
   async addMembers(
     trainingId: number,
     members: { userId: number; role: string }[]
