@@ -1,9 +1,18 @@
+
 import {
   IsNotEmpty,
   IsString,
   IsDateString,
   IsOptional,
+  IsEnum,
+  IsArray,
+  ValidateNested,
 } from "class-validator";
+import { Type } from "class-transformer";
+import { MemberDto } from "./training-members.dto";
+
+
+
 
 export class trainingDto {
   @IsNotEmpty()
@@ -16,9 +25,15 @@ export class trainingDto {
 
   @IsNotEmpty()
   @IsDateString()
-  start_date: Date;
+  startDate: Date;
 
   @IsNotEmpty()
   @IsDateString()
-  end_date: Date;
+  endDate: Date;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => MemberDto)
+  members?: MemberDto[];
 }

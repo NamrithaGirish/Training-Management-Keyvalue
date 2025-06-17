@@ -19,8 +19,9 @@ export default class TrainingController {
   async getTrainingDetails(req: Request, res: Response, next: NextFunction) {
     try {
       const id = parseInt(req.params.id);
+
       const training = await this.trainingService.getTrainingById(id);
-      res.status(200).json(Training);
+      res.status(200).json(training);
     } catch (err) {
       next(err);
     }
@@ -55,32 +56,6 @@ export default class TrainingController {
     }
   }
 
-  // async addMembers(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const TrainingId = parseInt(req.params.id);
-  //     const result = await this.trainingService.addMembers(
-  //       TrainingId,
-  //       req.body
-  //     );
-  //     res.status(200).json(result);
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // }
-
-  // async removeMembers(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const TrainingId = parseInt(req.params.id);
-  //     const { userId } = req.body;
-  //     const result = await this.trainingService.removeMember(
-  //       TrainingId,
-  //       userId
-  //     );
-  //     res.status(200).json(result);
-  //   } catch (err) {
-  //     next(err);
-  //   }
-  // }
   async addMembers(req: Request, res: Response) {
     const members = await this.trainingService.addMembers(
       +req.params.id,
@@ -89,8 +64,12 @@ export default class TrainingController {
     return res.status(201).json(members);
   }
 
+  // async removeMembers(req: Request, res: Response) {
+  //   await this.trainingService.removeMembers(+req.params.id, req.body.userIds);
+  //   return res.status(204).send();
+  // }
   async removeMembers(req: Request, res: Response) {
-    await this.trainingService.removeMembers(+req.params.id, req.body.userIds);
+    await this.trainingService.removeMembers(+req.params.id, req.body.members);
     return res.status(204).send();
   }
 }
