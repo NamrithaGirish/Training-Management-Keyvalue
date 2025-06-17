@@ -6,9 +6,9 @@ export const trainingApi = baseApi.injectEndpoints({
         getTrainingList: builder.query({
             query: () => ({ url: "/trainings", method: "GET" }),
         }),
-        getTrainingById: builder.query<TrainingDetailsPayload, { id: number }>({
+        getTrainingById: builder.query({
             query: (payload) => ({
-                url: `/trainings/1`,
+                url: `/trainings/${payload.id}`,
                 method: "GET"
             }),
         }),
