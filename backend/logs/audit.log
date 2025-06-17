@@ -1,3 +1,0 @@
-[2025-06-17T09:20:25.082Z] user=test_name_1 endpoint=/users/admin result=200 duration=10ms
-info: [2025-06-17T09:21:13.917Z][index()] Connected to db
-info: [2025-06-17T09:21:13.919Z][index()] Server listening to 4000
