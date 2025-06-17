@@ -30,7 +30,7 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
                     r="16"
                     fill="none"
                     className="stroke-current text-gray-200 dark:text-neutral-700"
-                    stroke-width="3"
+                    strokeWidth="3"
                 ></circle>
                 {value > 0 && (
                     <circle

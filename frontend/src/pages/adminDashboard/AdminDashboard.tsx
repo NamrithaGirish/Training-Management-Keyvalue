@@ -1,51 +1,34 @@
 import { useNavigate } from "react-router-dom";
-import DashboardCard from "../../components/dashboardCard/DashboardCard";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
 import EventList from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
-import { useGetTrainingByIdQuery, useGetTrainingListQuery } from "../../api-service/training/training.api";
-import { useEffect } from "react";
+import { useGetTrainingListQuery } from "../../api-service/training/training.api";
+import type { EventProps } from "react-big-calendar";
 
-const dummyDashboardData = [
-    {
-        title: "Althaf",
-        description: "A short one line description about the program",
-        duration: "3 days",
-        status: "Active",
-        totalSessions: 7,
-        progress: 30,
-    },
-    {
-        title: "Bhagya",
-        description: "A short one line description about the program",
-        duration: "3 days",
-        status: "Active",
-        totalSessions: 7,
-        progress: 90,
-    },
-    {
-        title: "Nithish",
-        description: "A short one line description about the program",
-        duration: "3 days",
-        status: "Scheduled",
-        totalSessions: 7,
-        progress: 90,
-    },
-];
+const formatTrainingList = (trainingDetailsList: Array<EventProps>) => {
+    if (!trainingDetailsList) return;
+    const formattedTrainingList = trainingDetailsList.map(
+        (trainingDetails: any) => {
+            return {
+                id: trainingDetails.id,
+                title: trainingDetails.title,
+                description: trainingDetails.description,
+                startDate: trainingDetails.startDate,
+                endDate: trainingDetails.endDate,
+                status: "Active",
+                // totalSessions: 7,
+                // progress: 30,
+            };
+        }
+    );
+    return formattedTrainingList;
+};
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
-
-    // const trainingDetailsList = useGetTrainingListQuery({});
-    // const trainingDetailsList = useGetTrainingByIdQuery({ id: 1 });
-    const trainingDetailsList = useGetTrainingListQuery({});
-
-    useEffect(() => {
-        console.log(trainingDetailsList)
-    }, [trainingDetailsList])
+    const { data: trainingDetailsList } = useGetTrainingListQuery({});
 
     return (
-
         <Layout title="Admin Dashboard">
             <div className="flex flex-col items-center justify-center gap-10 p-5">
                 <DashboardCardList
@@ -61,7 +44,7 @@ const AdminDashboard = () => {
                     heading="Programs"
                     showCreateButton={true}
                     onCreateClick={() => navigate("/program/create")}
-                    data={dummyDashboardData}
+                    data={formatTrainingList(trainingDetailsList)}
                 />
             </div>
         </Layout>
