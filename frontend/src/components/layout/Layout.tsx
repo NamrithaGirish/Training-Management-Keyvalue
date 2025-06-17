@@ -1,6 +1,12 @@
 import Header from "../header/Header";
 import Navbar from "../navbar/Navbar";
 
+interface LayoutProps {
+    title?: string;
+    children?: React.ReactNode;
+    endAdornments?: React.ReactNode;
+}
+
 const LightEffect = () => {
     return (
         <div className="w-bodyWidth h-screen flex items-center justify-center fixed top-0 pointer-events-none">
@@ -15,10 +21,10 @@ const LightEffect = () => {
     );
 };
 
-const Layout = ({ title, children }: { title?: string, children?: React.ReactNode }) => {
+const Layout: React.FC<LayoutProps> = ({ title, children, endAdornments }) => {
     return (
         <div className="flex flex-col min-h-screen bg-bgColor">
-            <Header title={title}/>
+            <Header title={title} endAdornments={endAdornments}/>
             <Navbar />
             <div className="flex mt-headerHeight">
                 <div className="w-full h-bodyHeight relative ml-navbarWidth">

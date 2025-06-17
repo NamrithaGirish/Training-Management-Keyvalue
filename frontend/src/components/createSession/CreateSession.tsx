@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { X } from "lucide-react";
 import Layout from "../layout/Layout";
 import FormInput from "../formInput/FormInput";
 import ActionButton from "../actionButton/ActionButton";
+import Button, { ButtonType } from "../button/Button";
 
 type SelectModalProps = {
     title: string;
@@ -35,6 +36,7 @@ const SelectModal: React.FC<SelectModalProps> = ({
             setLocalSelection([option]);
         }
     };
+
     return (
         <div className="fixed inset-0 w-full h-full bg-modalBgColor flex items-center justify-center z-50">
             <div className="bg-cardColor border border-borderColor rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
@@ -42,9 +44,9 @@ const SelectModal: React.FC<SelectModalProps> = ({
                     <h2 className="text-lg font-semibold text-white">
                         {title}
                     </h2>
-                    <button onClick={onClose}>
+                    <Button onClick={onClose}>
                         <X className="text-gray-300 hover:text-white" />
-                    </button>
+                    </Button>
                 </div>
                 <div className="space-y-2">
                     {options.map((option) => (
@@ -63,21 +65,18 @@ const SelectModal: React.FC<SelectModalProps> = ({
                     ))}
                 </div>
                 <div className="flex justify-end gap-4 mt-6">
-                    <button
-                        onClick={onClose}
-                        className="bg-white text-black px-4 py-1 rounded hover:opacity-90"
-                    >
-                        Cancel
-                    </button>
-                    <button
+                    <Button
+                        variant={ButtonType.PRIMARY}
                         onClick={() => {
                             onSelect(localSelection);
                             onClose();
                         }}
-                        className="bg-black border text-white border-white px-4 py-1 rounded hover:bg-white hover:text-black transition"
                     >
                         Save
-                    </button>
+                    </Button>
+                    <Button onClick={onClose} variant={ButtonType.SECONDARY}>
+                        Cancel
+                    </Button>
                 </div>
             </div>
         </div>
@@ -154,18 +153,15 @@ const CreateSession = () => {
 
                 {/* Buttons */}
                 <div className="flex justify-end gap-4">
-                    <button
-                        onClick={handleSubmit}
-                        className="bg-itemColor border text-white border-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-                    >
+                    <Button variant={ButtonType.PRIMARY} onClick={handleSubmit}>
                         Submit
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        variant={ButtonType.SECONDARY}
                         onClick={handleCancel}
-                        className="bg-white text-black px-4 py-2 rounded hover:opacity-90"
                     >
                         Cancel
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Trainer Modal */}

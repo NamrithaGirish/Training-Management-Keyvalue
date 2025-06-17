@@ -126,7 +126,7 @@ const EventList: React.FC<EventListProps> = ({
     const filteredData = (data || []).filter(
         (item) =>
             item.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (heading == "Programs" ||
+            (heading != "Sessions" ||
                 statusFilter.toLowerCase() == "all" ||
                 item.status === statusFilter)
     );
@@ -202,7 +202,7 @@ const EventList: React.FC<EventListProps> = ({
                 <div className="space-y-4 w-full px-2">
                     {filteredData.length === 0 ? (
                         <p className="text-center text-gray-500 w-full border-2 border-borderColor py-10">
-                            No programs found
+                            No trainings found
                         </p>
                     ) : (
                         filteredData.map((item, index) => (

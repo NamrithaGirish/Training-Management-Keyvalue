@@ -4,15 +4,15 @@ import CreateUserPool, {
 } from "./pages/createUserPool/CreateUserPool";
 
 import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
-import CreateProgram from "./pages/training/CreateTraining";
-import EditProgram from "./pages/training/EditTraining";
+import CreateTraining from "./pages/training/CreateTraining";
+import UpdateTraining from "./pages/training/UpdateTraining";
 import Login from "./pages/login/Login";
 import TrainingDetails from "./pages/training/TrainingDetails";
 import NotFound from "./components/error/notFound/NoutFound";
 
 import CreateSession from "./components/createSession/CreateSession";
 
-import SessionDetails from "./pages/sessionDetails/SessionDetails";
+import SessionDetails from "./pages/session/SessionDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         errorElement: <NotFound />,
     },
     {
-        path: "/program",
+        path: "/training",
         element: <Outlet />,
         children: [
             {
@@ -36,16 +36,16 @@ const router = createBrowserRouter([
                 element: <NotFound />,
             },
             {
+                path: "create",
+                element: <CreateTraining />,
+            },
+            {
                 path: ":trainingId",
                 element: <TrainingDetails />,
             },
             {
-                path: "create",
-                element: <CreateProgram />,
-            },
-            {
-                path: "edit",
-                element: <EditProgram />,
+                path: ":trainingId/update",
+                element: <UpdateTraining />,
             },
         ],
         errorElement: <NotFound />,
