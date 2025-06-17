@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import ActionButton from "../../components/actionButton/ActionButton";
 import FormInput from "../../components/formInput/FormInput";
 import Layout from "../../components/layout/Layout";
 
 const CreateProgram = () => {
+    const navigate = useNavigate();
     return (
         <Layout title="Create Program">
             <div className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded">
@@ -35,22 +37,24 @@ const CreateProgram = () => {
                 />
             </div>
             <div className="flex flex-col gap-3">
-                <ActionButton label="Add Trainer to Pool" onClick={() => {}} />
+                <ActionButton
+                    label="Add Trainer to Pool"
+                    onClick={() => navigate("/createPool/trainer")}
+                />
                 <ActionButton
                     label="Add Moderators to Pool"
-                    onClick={() => {}}
+                    onClick={() => navigate("/createPool/moderator")}
                 />
                 <ActionButton
                     label="Add Candidates to Pool"
-                    onClick={() => {}}
+                    onClick={() => navigate("/createPool/candidate")}
                 />
-                <ActionButton label="Create New Session" onClick={() => {}} />
+                <ActionButton label="Create New Session" onClick={() => navigate("/session/create")} />
                 <ActionButton
                     label="Add Sessions to Schedule"
                     onClick={() => {}}
                 />
             </div>
-            
         </Layout>
     );
 };

@@ -1,13 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import DashboardCard from "../../components/dashboardCard/DashboardCard";
+import { DashboardCardType } from "../../components/dashboardCard/DashboardCard";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
 import EventList from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
+import LinearProgressBar from "../../components/progressBar/linearProgressBar/LinearProgressBar";
 
 const dummyDashboardData = [
     {
         title: "Althaf",
-        description: "A short one line description about the program",
+        description: "A short one line description about the session",
         duration: "3 days",
         status: "Active",
         totalSessions: 7,
@@ -15,7 +15,7 @@ const dummyDashboardData = [
     },
     {
         title: "Bhagya",
-        description: "A short one line description about the program",
+        description: "A short one line description about the session",
         duration: "3 days",
         status: "Active",
         totalSessions: 7,
@@ -23,7 +23,7 @@ const dummyDashboardData = [
     },
     {
         title: "Nithish",
-        description: "A short one line description about the program",
+        description: "A short one line description about the session",
         duration: "3 days",
         status: "Scheduled",
         totalSessions: 7,
@@ -31,24 +31,32 @@ const dummyDashboardData = [
     },
 ];
 
-const AdminDashboard = () => {
-    const navigate = useNavigate();
+const Program = () => {
     return (
-        <Layout title="Admin Dashboard">
+        <Layout title="Program">
             <div className="flex flex-col items-center justify-center gap-10 p-5">
                 <DashboardCardList
                     data={[
-                        { label: "Text", value: "1" },
-                        { label: "Text", value: "2" },
-                        { label: "Text", value: "3" },
+                        { label: "Total Program", value: "1" },
+                        { label: "Upcoming Sessions", value: "3" },
+                        {
+                            label: "Total Progress",
+                            value: "50",
+                            type: DashboardCardType.PROGRESS,
+                        },
                         { label: "Text", value: "4" },
                         { label: "Text", value: "5" },
                     ]}
                 />
+                <LinearProgressBar
+                    startDate="2023-10-13"
+                    todayDate="2023-10-15"
+                    endDate="2023-10-31"
+                />
                 <EventList
-                    heading="Programs"
+                    heading="Sessions"
                     showCreateButton={true}
-                    onCreateClick={() => navigate("/program/create")}
+                    onCreateClick={() => console.log("Create program clicked")}
                     data={dummyDashboardData}
                 />
             </div>
@@ -56,4 +64,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+export default Program;

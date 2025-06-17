@@ -13,8 +13,14 @@ const dummyUsers = [
     "User 10",
 ];
 
+export const PoolUserRole = {
+    TRAINER: "Trainer",
+    MODERATOR: "Moderator",
+    CANDIDATE: "Candidate"
+} as const;
+
 interface CreateUserPoolProps {
-    role: string;
+    role: typeof PoolUserRole[keyof typeof PoolUserRole];
 }
 
 interface AddUserModalProps {
