@@ -18,7 +18,7 @@ trainingRouter.get(
 );
 trainingRouter.get(
   "/:id",
-  trainingController.getTrainings.bind(trainingController)
+  trainingController.getTrainingDetails.bind(trainingController)
 );
 trainingRouter.post(
   "/",

@@ -4,7 +4,6 @@ import {
   TrainingUser,
   TrainingUserRole,
 } from "../entities/training-users.entity";
-// import { TrainingMember } from "../entities/training-member.entity";
 
 export default class TrainingRepository {
   constructor(private trainingRepo: Repository<Training>) {}
@@ -21,11 +20,17 @@ export default class TrainingRepository {
       .getMany();
   }
 
-  findOneById(id: number) {
-    return this.trainingRepo.findOne({
+  async findOneById(id: number) {
+    const training = await this.trainingRepo.findOne({
       where: { id },
       relations: ["members", "members.user"],
     });
+    console.log(training);
+    if (!training) {
+      throw new Error(`Training with ID ${id} not found`);
+    }
+
+    return training;
   }
 
   saveTraining(trainingDto: Partial<Training>) {
@@ -56,14 +61,22 @@ export default class TrainingRepository {
       .save(insertValues);
   }
 
-  async removeMembers(trainingId: number, userIds: number[]) {
+ 
+  async removeMembers(
+    trainingId: number,
+    members: { userId: number; role: string }[]
+  ) {
     const trainingUserRepo =
       this.trainingRepo.manager.getRepository(TrainingUser);
-    return trainingUserRepo.delete(
-      userIds.map((userId) => ({
+
+    for (const m of members) {
+      await trainingUserRepo.delete({
         training: { id: trainingId },
-        user: { id: userId },
-      }))
-    );
+        user: { id: m.userId },
+        role: m.role as TrainingUserRole,
+      });
+    }
+
+    return { message: "Members removed" };
   }
 }

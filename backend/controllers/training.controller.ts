@@ -19,8 +19,9 @@ export default class TrainingController {
   async getTrainingDetails(req: Request, res: Response, next: NextFunction) {
     try {
       const id = parseInt(req.params.id);
+
       const training = await this.trainingService.getTrainingById(id);
-      res.status(200).json(Training);
+      res.status(200).json(training);
     } catch (err) {
       next(err);
     }
@@ -63,8 +64,12 @@ export default class TrainingController {
     return res.status(201).json(members);
   }
 
+  // async removeMembers(req: Request, res: Response) {
+  //   await this.trainingService.removeMembers(+req.params.id, req.body.userIds);
+  //   return res.status(204).send();
+  // }
   async removeMembers(req: Request, res: Response) {
-    await this.trainingService.removeMembers(+req.params.id, req.body.userIds);
+    await this.trainingService.removeMembers(+req.params.id, req.body.members);
     return res.status(204).send();
   }
 }
