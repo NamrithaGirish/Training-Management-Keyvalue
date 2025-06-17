@@ -44,9 +44,13 @@ export default class TrainingService {
   }
 
   removeMembers(
-    trainingId: number,
-    members: { userId: number; role: string }[]
-  ) {
-    return this.trainingRepository.removeMembers(trainingId, members);
-  }
+  trainingId: number,
+  members: { userId: number; role: string }[]
+) {
+  return this.trainingRepository.removeMembers(trainingId, members);
+}
+async getProgramsByUserId(userId: number) {
+  return this.trainingRepository.findProgramsByUserId(userId);
+}
+
 }
