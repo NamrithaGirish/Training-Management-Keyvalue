@@ -9,6 +9,7 @@ import errorMiddleware from "./middlewares/errorMiddleware";
 import authMiddleware from "./middlewares/auth.middleware";
 import sessionRouter from "./routes/session.routes";
 import materialRouter from "./routes/material.route";
+import trainingRouter from "./routes/training.route";
 
 const PORT = 3000;
 
@@ -21,7 +22,7 @@ server.use(express.json());
 
 // Global routes
 server.get("/health", (req, res) => {
-	res.status(200).json({ message: "Server is healthy" });
+  res.status(200).json({ message: "Server is healthy" });
 });
 
 // Import routes
@@ -29,17 +30,18 @@ server.use("/auth", authRouter);
 server.use("/users", userRouter);
 server.use("/session",sessionRouter)
 server.use("/material",materialRouter)
+server.use("/trainings", trainingRouter);
 server.use(errorMiddleware);
 
 (async () => {
-	try {
-		await dataSource.initialize();
-		logger.info("Connected to db");
-		server.listen(PORT, () => {
-			logger.info(`Server listening to ${PORT}`);
-		});
-	} catch (error) {
-		logger.error(`Failed to connect to db - ${error.message}`);
-		process.exit(0);
-	}
+  try {
+    await dataSource.initialize();
+    logger.info("Connected to db");
+    server.listen(PORT, () => {
+      logger.info(`Server listening to ${PORT}`);
+    });
+  } catch (error) {
+    logger.error(`Failed to connect to db - ${error.message}`);
+    process.exit(0);
+  }
 })();
