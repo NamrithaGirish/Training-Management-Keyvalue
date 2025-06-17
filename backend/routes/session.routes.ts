@@ -3,9 +3,13 @@ import { SessionController } from "../controllers/session.controller";
 import dataSource from "../db/dataSource";
 import SessionRepository from "../repositories/session.repository";
 import { SessionService } from "../services/session.service";
+import { UserSessionRepository } from "../repositories/user-session.repository";
+import { userService } from "./user.route";
 
 
 const sessionRepository = new SessionRepository(dataSource.getRepository("Session"));
+const userSessionRepository=new UserSessionRepository(dataSource.getRepository("UserSession"))
+
 const sessionService= new SessionService(sessionRepository);
 const sessionController=new SessionController(sessionService);
 
