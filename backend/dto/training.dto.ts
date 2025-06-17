@@ -9,10 +9,15 @@ import {
   ValidateNested,
 } from "class-validator";
 import { Type } from "class-transformer";
-import { MemberDto } from "./training-members.dto";
+import { TrainingUserRole } from "../entities/training-users.entity";
 
+class MemberDto {
+  @IsNotEmpty()
+  userId: number;
 
-
+  @IsEnum(TrainingUserRole)
+  role: TrainingUserRole;
+}
 
 export class trainingDto {
   @IsNotEmpty()
