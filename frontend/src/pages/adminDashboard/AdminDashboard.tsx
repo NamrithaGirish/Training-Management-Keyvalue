@@ -3,6 +3,8 @@ import DashboardCard from "../../components/dashboardCard/DashboardCard";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
 import EventList from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
+import { useGetTrainingByIdQuery, useGetTrainingListQuery } from "../../api-service/training/training.api";
+import { useEffect } from "react";
 
 const dummyDashboardData = [
     {
@@ -33,7 +35,17 @@ const dummyDashboardData = [
 
 const AdminDashboard = () => {
     const navigate = useNavigate();
+
+    // const trainingDetailsList = useGetTrainingListQuery({});
+    // const trainingDetailsList = useGetTrainingByIdQuery({ id: 1 });
+    const trainingDetailsList = useGetTrainingListQuery({});
+
+    useEffect(() => {
+        console.log(trainingDetailsList)
+    }, [trainingDetailsList])
+
     return (
+
         <Layout title="Admin Dashboard">
             <div className="flex flex-col items-center justify-center gap-10 p-5">
                 <DashboardCardList

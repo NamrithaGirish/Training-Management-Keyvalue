@@ -4,10 +4,10 @@ import CreateUserPool, {
 } from "./pages/createUserPool/CreateUserPool";
 
 import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
-import CreateProgram from "./pages/createProgram/CreateProgram";
-import EditProgram from "./pages/editProgram/EditProgram";
+import CreateProgram from "./pages/training/CreateTraining";
+import EditProgram from "./pages/training/EditTraining";
 import Login from "./pages/login/Login";
-import TrainingDetails from "./pages/trainingDetails/TrainingDetails";
+import TrainingDetails from "./pages/training/TrainingDetails";
 import NotFound from "./components/error/notFound/NoutFound";
 
 import CreateSession from "./components/createSession/CreateSession";

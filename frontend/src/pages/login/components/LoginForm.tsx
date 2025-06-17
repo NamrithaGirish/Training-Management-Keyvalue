@@ -106,7 +106,7 @@ const LoginForm = () => {
             .catch((error) => {
                 console.log(error);
                 setSigninData({ username: "", password: "" });
-                navigate("/login");
+                navigate("/");
             });
     };
 
