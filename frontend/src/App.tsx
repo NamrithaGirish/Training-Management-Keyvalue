@@ -1,13 +1,20 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import CreateUserPool, {
+    PoolUserRole,
+} from "./pages/createUserPool/CreateUserPool";
 
-import SessionDetailsForm from "./components/sessionDetailsForm/SessionDetailsForm";
 import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
 import CreateProgram from "./pages/createProgram/CreateProgram";
-import CreateUserPool, { PoolUserRole } from "./pages/createUserPool/CreateUserPool";
 import EditProgram from "./pages/editProgram/EditProgram";
 import Login from "./pages/login/Login";
-import Program from "./pages/programs/Programs";
+import ProgramDetails from "./pages/programDetails/ProgramDetails";
 import NotFound from "./components/error/notFound/NoutFound";
+
+import SessionDetailsForm from "./components/sessionDetailsForm/SessionDetailsForm";
+
+import SessionDetails from "./pages/sessionDetails/SessionDetails";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 const router = createBrowserRouter([
     {
@@ -26,7 +33,11 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Program />,
+                element: <NotFound />,
+            },
+            {
+                path: ":name",
+                element: <ProgramDetails />,
             },
             {
                 path: "create",
@@ -44,9 +55,17 @@ const router = createBrowserRouter([
         element: <Outlet />,
         children: [
             {
+                index: true,
+                element: <NotFound />,
+            },
+            {
+                path: ":sessionId",
+                element: <SessionDetails />,
+            },
+            {
                 path: "create",
                 element: <SessionDetailsForm />,
-            }
+            },
         ],
         errorElement: <NotFound />,
     },
@@ -65,14 +84,22 @@ const router = createBrowserRouter([
             {
                 path: "candidate",
                 element: <CreateUserPool role={PoolUserRole.CANDIDATE} />,
-            }
+            },
         ],
         errorElement: <NotFound />,
+    },
+    {
+        path: "*",
+        element: <NotFound />
     }
 ]);
 
 function App() {
-    return <RouterProvider router={router} />;
+    return (
+        <Provider store={store}>
+            <RouterProvider router={router} />
+        </Provider>
+    );
 }
 
 export default App;

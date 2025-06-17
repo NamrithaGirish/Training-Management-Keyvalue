@@ -1,8 +1,9 @@
+import { useParams } from "react-router-dom";
 import { DashboardCardType } from "../../components/dashboardCard/DashboardCard";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
 import EventList from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
-import LinearProgressBar from "../../components/progressBar/linearProgressBar/LinearProgressBar";
+import TimelineProgressBar from "../../components/progressBar/timelineProgressBar/TimelineProgressBar";
 
 const dummyDashboardData = [
     {
@@ -31,9 +32,10 @@ const dummyDashboardData = [
     },
 ];
 
-const Program = () => {
+const ProgramDetails = () => {
+    const { name } = useParams();
     return (
-        <Layout title="Program">
+        <Layout title={name}>
             <div className="flex flex-col items-center justify-center gap-10 p-5">
                 <DashboardCardList
                     data={[
@@ -41,14 +43,14 @@ const Program = () => {
                         { label: "Upcoming Sessions", value: "3" },
                         {
                             label: "Total Progress",
-                            value: "50",
+                            value: "60",
                             type: DashboardCardType.PROGRESS,
                         },
                         { label: "Text", value: "4" },
                         { label: "Text", value: "5" },
                     ]}
                 />
-                <LinearProgressBar
+                <TimelineProgressBar
                     startDate="2023-10-13"
                     todayDate="2023-10-15"
                     endDate="2023-10-31"
@@ -64,4 +66,4 @@ const Program = () => {
     );
 };
 
-export default Program;
+export default ProgramDetails;

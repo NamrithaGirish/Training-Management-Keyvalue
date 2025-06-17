@@ -1,10 +1,10 @@
-type LinearProgressBarProps = {
+type TimelineProgressBarProps = {
     startDate: string;
     todayDate: string;
     endDate: string;
 };
 
-const LinearProgressBar: React.FC<LinearProgressBarProps> = ({
+const TimelineProgressBar: React.FC<TimelineProgressBarProps> = ({
     startDate,
     todayDate,
     endDate,
@@ -65,4 +65,4 @@ const LinearProgressBar: React.FC<LinearProgressBarProps> = ({
     );
 };
 
-export default LinearProgressBar;
+export default TimelineProgressBar;

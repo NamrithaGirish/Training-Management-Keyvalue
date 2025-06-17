@@ -15,6 +15,7 @@ type EventProps = {
 
 type EventItem = {
     item: EventProps;
+    heading: string;
 };
 
 type EventListProps = {
@@ -24,12 +25,12 @@ type EventListProps = {
     data?: EventProps[];
 };
 
-const EventListItem: React.FC<EventItem> = ({ item }) => {
+const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
     const navigate = useNavigate();
     return (
         <div
             className="border border-gray-700 p-4 rounded-lg bg-cardColor cursor-pointer"
-            onClick={() => navigate("/program")}
+            onClick={() => navigate(`/${heading}/${item.title}`)}
         >
             <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold">{item.title}</h3>
@@ -133,7 +134,11 @@ const EventList: React.FC<EventListProps> = ({
                         </p>
                     ) : (
                         filteredData.map((item, index) => (
-                            <EventListItem key={index} item={item} />
+                            <EventListItem
+                                key={index}
+                                item={item}
+                                heading={heading.slice(0, -1).toLowerCase()}
+                            />
                         ))
                     )}
                 </div>

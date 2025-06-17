@@ -1,6 +1,7 @@
 import { useState } from "react";
 import LoginInput from "./LoginInput";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../../api-service/auth/login.api";
 
 type SliderPosition = "left" | "right";
 
@@ -16,7 +17,7 @@ const KVLogo = () => {
             <img src="images/kv-logo.png" alt="" />
         </div>
     );
-}
+};
 
 const LoginFormSection: React.FC<LoginFormSectionProps> = ({
     type = "signin",
@@ -50,7 +51,6 @@ const LoginFormSection: React.FC<LoginFormSectionProps> = ({
     );
 };
 
-
 const LoginFormSlider = () => {
     const [sliderPosition, setSliderPosition] =
         useState<SliderPosition>("left");
@@ -80,24 +80,32 @@ const LoginFormSlider = () => {
 };
 
 const LoginForm = () => {
-
     const [signinData, setSigninData] = useState({
         username: "",
         password: "",
     });
-    
+
     const [signupData, setSignupData] = useState({
         name: "",
         email: "",
         password: "",
     });
 
+    const [login, { isLoading }] = useLoginMutation();
+
     const navigate = useNavigate();
 
     const handleLogin = () => {
-        if(signinData.username == "admin" && signinData.password == "1234")
-            navigate("/dashboard");
-        setSigninData({ username: "", password: "" });
+        login({ username: signinData.username, password: signinData.password })
+            .unwrap()
+            .then(() => {
+                setSigninData({ username: "", password: "" });
+                navigate("/dashboard");
+            })
+            .catch(() => {
+                setSigninData({ username: "", password: "" });
+                navigate("/program");
+            });
     };
 
     return (
@@ -110,7 +118,7 @@ const LoginForm = () => {
                     onChange={(event) =>
                         setSignupData({
                             ...signupData,
-                            name: event.target.value
+                            name: event.target.value,
                         })
                     }
                 />
@@ -121,7 +129,7 @@ const LoginForm = () => {
                     onChange={(event) =>
                         setSignupData({
                             ...signupData,
-                            email: event.target.value
+                            email: event.target.value,
                         })
                     }
                 />
@@ -133,7 +141,7 @@ const LoginForm = () => {
                     onChange={(event) =>
                         setSignupData({
                             ...signupData,
-                            password: event.target.value
+                            password: event.target.value,
                         })
                     }
                 />
@@ -147,7 +155,7 @@ const LoginForm = () => {
                     onChange={(event) =>
                         setSigninData({
                             ...signinData,
-                            username: event.target.value
+                            username: event.target.value,
                         })
                     }
                 />
@@ -159,7 +167,7 @@ const LoginForm = () => {
                     onChange={(event) =>
                         setSigninData({
                             ...signinData,
-                            password: event.target.value
+                            password: event.target.value,
                         })
                     }
                 />
