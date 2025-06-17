@@ -8,8 +8,11 @@ import {
 export default class TrainingRepository {
   constructor(private trainingRepo: Repository<Training>) {}
 
+  // If you use findAll:
   findAll() {
-    return this.trainingRepo.find();
+    return this.trainingRepo.find({
+      relations: ["members", "members.user", "sessions"],
+    });
   }
 
   findTrainingsByUser(userId: number) {
@@ -23,7 +26,7 @@ export default class TrainingRepository {
   async findOneById(id: number) {
     const training = await this.trainingRepo.findOne({
       where: { id },
-      relations: ["members", "members.user"],
+      relations: ["members", "members.user", "sessions"],
     });
     console.log(training);
     if (!training) {
@@ -61,7 +64,6 @@ export default class TrainingRepository {
       .save(insertValues);
   }
 
- 
   async removeMembers(
     trainingId: number,
     members: { userId: number; role: string }[]
