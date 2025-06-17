@@ -10,7 +10,7 @@ import Login from "./pages/login/Login";
 import TrainingDetails from "./pages/training/TrainingDetails";
 import NotFound from "./components/error/notFound/NoutFound";
 
-import CreateSession from "./components/createSession/CreateSession";
+import CreateSession from "./pages/session/CreateSession";
 
 import SessionDetails from "./pages/session/SessionDetails";
 import { Provider } from "react-redux";
@@ -47,28 +47,29 @@ const router = createBrowserRouter([
                 path: ":trainingId/update",
                 element: <UpdateTraining />,
             },
+            {
+                path: ":trainingId/session",
+                element: <Outlet />,
+                children: [
+                    {
+                        index: true,
+                        element: <NotFound />,
+                    },
+                    {
+                        path: ":sessionId",
+                        element: <SessionDetails />,
+                    },
+                    {
+                        path: "create",
+                        element: <CreateSession />,
+                    },
+                ],
+                errorElement: <NotFound />,
+            },
         ],
         errorElement: <NotFound />,
     },
-    {
-        path: "/session",
-        element: <Outlet />,
-        children: [
-            {
-                index: true,
-                element: <NotFound />,
-            },
-            {
-                path: ":sessionId",
-                element: <SessionDetails />,
-            },
-            {
-                path: "create",
-                element: <CreateSession />,
-            },
-        ],
-        errorElement: <NotFound />,
-    },
+
     {
         path: "/createPool",
         element: <Outlet />,
@@ -90,8 +91,8 @@ const router = createBrowserRouter([
     },
     {
         path: "*",
-        element: <NotFound />
-    }
+        element: <NotFound />,
+    },
 ]);
 
 function App() {

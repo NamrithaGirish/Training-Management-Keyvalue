@@ -9,10 +9,10 @@ import type { UserRole, SessionData } from "./components/sessionTypes";
 import Layout from "../../components/layout/Layout";
 import { useParams } from "react-router-dom";
 
-// interface SessionDetailsProps {
-//     userRole: UserRole;
-//     sessionData: SessionData;
-// }
+interface SessionDetailsProps {
+    userRole: UserRole;
+    sessionData: SessionData;
+}
 
 const SessionDetails = () => {
     const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -20,7 +20,6 @@ const SessionDetails = () => {
     const [candidateListModalOpen, setCandidateListModalOpen] = useState(false);
 
     const { sessionId } = useParams();
-    // const userRole = "trainer";
     // const sessionData={
     //     trainerName: "",
     //     moderators: [""],

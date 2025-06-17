@@ -68,7 +68,7 @@ const TrainingDetails = () => {
                 <EventList
                     heading="Sessions"
                     showCreateButton={true}
-                    onCreateClick={() => console.log("Create program clicked")}
+                    onCreateClick={() => navigate("session/create")}
                     data={formatTrainingList(trainingDetails.sessions)}
                 />
             </div>

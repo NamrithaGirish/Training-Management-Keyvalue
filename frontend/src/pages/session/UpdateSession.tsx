@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import Layout from "../layout/Layout";
-import FormInput from "../formInput/FormInput";
-import ActionButton from "../actionButton/ActionButton";
-import Button, { ButtonType } from "../button/Button";
+import Layout from "../../components/layout/Layout";
+import FormInput from "../../components/formInput/FormInput";
+import ActionButton from "../../components/actionButton/ActionButton";
+import Button, { ButtonType } from "../../components/button/Button";
 
 type SelectModalProps = {
     title: string;
