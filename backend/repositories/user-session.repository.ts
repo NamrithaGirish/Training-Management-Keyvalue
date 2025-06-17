@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { UserSession } from "../entities/user-session.entity";
+import { Role, UserSession } from "../entities/user-session.entity";
 import { Session } from "../entities/session.entity";
 import { User } from "../entities/user.entity";
 
@@ -43,7 +43,7 @@ export class UserSessionRepository {
   }
 
   // Update a user's role in a session
-  async updateRole(userId: number, sessionId: number, newRole: string): Promise<void> {
+  async updateRole(userId: number, sessionId: number, newRole: Role): Promise<void> {
     await this.repository.update(
       { user: { id: userId }, session: { id: sessionId } },
       { role: newRole }

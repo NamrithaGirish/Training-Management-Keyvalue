@@ -4,6 +4,9 @@ import { Feedback } from "./feedback.entity";
 import { UserSession } from "./user-session.entity";
 import AssignmentSubmission from "./assignmentSubmission.entity";
 
+import { TrainingUser } from "./training-users.entity";
+
+
 @Entity()
 export class User extends AbstractBaseEntity {
   @Column()
@@ -27,9 +30,16 @@ export class User extends AbstractBaseEntity {
   @OneToMany(() => Feedback, (feedback) => feedback.to, {})
   sentFeedbacks: Feedback[];
 
+
   @OneToMany(
     () => AssignmentSubmission,
     (assignmentSubmission) => assignmentSubmission.user
   )
   assignments: AssignmentSubmission[];
+
+  @OneToMany(() => UserSession, (userSession) => userSession.user)
+  userSessions: UserSession[];
+  @OneToMany(() => TrainingUser, (trainingUser) => trainingUser.user)
+  trainingMemberships: TrainingUser[];
+
 }

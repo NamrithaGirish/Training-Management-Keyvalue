@@ -5,7 +5,7 @@ import {
   IsOptional,
 } from "class-validator";
 
-export class CreateProgramDto {
+export class trainingDto {
   @IsNotEmpty()
   @IsString()
   title: string;

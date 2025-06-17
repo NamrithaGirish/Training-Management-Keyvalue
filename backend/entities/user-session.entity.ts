@@ -9,6 +9,14 @@ import { User } from "./user.entity";
 import { Session } from "./session.entity";
 import AbstractBaseEntity from "./abstract.entity";
 
+export enum Role{
+Candidate="Candidate",
+Trainer="Trainer",
+Moderator="Moderator",
+Admin="Admin"
+}
+
+
 @Entity()
 @Unique(["user", "session"]) // prevent duplicate pairs
 export class UserSession extends AbstractBaseEntity{
@@ -20,7 +28,7 @@ export class UserSession extends AbstractBaseEntity{
   session: Session;
 
   @Column({ type: "varchar", length: 100 })
-  role: string;
+  role:Role;
   
  
 }
