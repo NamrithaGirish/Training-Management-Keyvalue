@@ -20,8 +20,8 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
                         x2="100%"
                         y2="0%"
                     >
-                        <stop offset="0%" stop-color="blue" />
-                        <stop offset="100%" stop-color="red" />
+                        <stop offset="0%" stopColor="blue" />
+                        <stop offset="100%" stopColor="red" />
                     </linearGradient>
                 </defs>
                 <circle
@@ -39,10 +39,10 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
                         r="16"
                         fill="none"
                         stroke="url(#gradient-stroke)"
-                        stroke-width="3"
-                        stroke-dasharray="100"
-                        stroke-dashoffset={100 - value}
-                        stroke-linecap="round"
+                        strokeWidth="3"
+                        strokeDasharray="100"
+                        strokeDashoffset={100 - value}
+                        strokeLinecap="round"
                     ></circle>
                 )}
             </svg>

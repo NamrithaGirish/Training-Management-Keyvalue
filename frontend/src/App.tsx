@@ -7,10 +7,10 @@ import AdminDashboard from "./pages/adminDashboard/AdminDashboard";
 import CreateProgram from "./pages/createProgram/CreateProgram";
 import EditProgram from "./pages/editProgram/EditProgram";
 import Login from "./pages/login/Login";
-import ProgramDetails from "./pages/programDetails/ProgramDetails";
+import TrainingDetails from "./pages/trainingDetails/TrainingDetails";
 import NotFound from "./components/error/notFound/NoutFound";
 
-import SessionDetailsForm from "./components/sessionDetailsForm/SessionDetailsForm";
+import CreateSession from "./components/createSession/CreateSession";
 
 import SessionDetails from "./pages/sessionDetails/SessionDetails";
 import { Provider } from "react-redux";
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
             },
             {
                 path: ":name",
-                element: <ProgramDetails />,
+                element: <TrainingDetails />,
             },
             {
                 path: "create",
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "create",
-                element: <SessionDetailsForm />,
+                element: <CreateSession />,
             },
         ],
         errorElement: <NotFound />,

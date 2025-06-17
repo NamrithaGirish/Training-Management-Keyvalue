@@ -98,13 +98,15 @@ const LoginForm = () => {
     const handleLogin = () => {
         login({ username: signinData.username, password: signinData.password })
             .unwrap()
-            .then(() => {
+            .then((data) => {
+                localStorage.setItem("token", data.accessToken);
                 setSigninData({ username: "", password: "" });
                 navigate("/dashboard");
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error);
                 setSigninData({ username: "", password: "" });
-                navigate("/program");
+                navigate("/login");
             });
     };
 

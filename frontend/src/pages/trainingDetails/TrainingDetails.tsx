@@ -32,7 +32,7 @@ const dummyDashboardData = [
     },
 ];
 
-const ProgramDetails = () => {
+const TrainingDetails = () => {
     const { name } = useParams();
     return (
         <Layout title={name}>
@@ -66,4 +66,4 @@ const ProgramDetails = () => {
     );
 };
 
-export default ProgramDetails;
+export default TrainingDetails;
