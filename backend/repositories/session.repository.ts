@@ -16,6 +16,7 @@ class SessionRepository {
   async findAll(): Promise<Session[]> {
     return this.repository.find({
       relations: {
+        training:true,
         userSessions: {
           user: true,
         },
@@ -40,6 +41,7 @@ class SessionRepository {
     return this.repository.findOne({
       where: { id },
       relations: {
+        training:true,
         userSessions: {
           user: true,
         },

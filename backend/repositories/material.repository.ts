@@ -10,11 +10,20 @@ export class MaterialRepository {
   }
 
   async getById(id: number): Promise<Material | null> {
-    return this.repository.findOne({ where: { id } });
+    return this.repository.findOne({
+      where: { id },
+      relations: {
+        session:true,
+      },
+    });
   }
 
   async getAll(): Promise<Material[]> {
-    return this.repository.find();
+    return this.repository.find({
+      relations: {
+        session:true,
+      },
+    });
   }
 
   async update(id: number, data: Partial<Material>): Promise<Material | null> {
@@ -24,7 +33,7 @@ export class MaterialRepository {
   async delete(id: number): Promise<void> {
     await this.repository.delete({ id });
   }
- 
+
   async getBySessionId(session: Session): Promise<Material[]> {
     return this.repository.find({ where: { session } });
   }

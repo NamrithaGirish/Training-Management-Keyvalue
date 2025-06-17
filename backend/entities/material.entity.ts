@@ -16,7 +16,7 @@ export class Material extends AbstractBaseEntity {
   @ManyToOne(() => Session, (session) => session.materials, {
     onDelete: "CASCADE",
   })
-  @JoinColumn({ name: "session_id" })
+  
   session: Session;
 
   @Column("text")

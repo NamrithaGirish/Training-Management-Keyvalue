@@ -6,8 +6,9 @@ import LoggerService from "./services/logger.service";
 import userRouter from "./routes/user.route";
 import authRouter from "./routes/auth.routes";
 import errorMiddleware from "./middlewares/errorMiddleware";
-import authMiddleware from "./middlewares/auth.middleware";
+import authMiddleware from "./middlewares/auth.middleware"
 import sessionRouter from "./routes/session.routes";
+import materialRouter from "./routes/material.route";
 import trainingRouter from "./routes/training.route";
 import feedbackRouter from "./routes/feedback.routes";
 
@@ -28,7 +29,8 @@ server.get("/health", (req, res) => {
 // Import routes
 server.use("/auth", authRouter);
 server.use("/users", userRouter);
-server.use("/session", sessionRouter);
+server.use("/session",sessionRouter)
+server.use("/material",materialRouter)
 server.use("/trainings", trainingRouter);
 server.use("/feedback", feedbackRouter);
 server.use(errorMiddleware);
