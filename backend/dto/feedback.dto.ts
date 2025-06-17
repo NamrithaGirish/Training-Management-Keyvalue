@@ -5,31 +5,41 @@ import {
 	IsNumber,
 	Min,
 	Max,
+	IsEnum,
 } from "class-validator";
+import { FeedbackType } from "../entities/feedback.entity";
 
 export class CreateFeedbackDto {
 	@IsString()
 	@IsNotEmpty()
-	comment: string;
+	comments: string;
 
 	@IsNumber()
 	@Min(0)
 	@Max(10)
 	rating: number;
 
-	@IsString()
+	@IsNumber()
 	@IsNotEmpty()
 	fromId: number;
 
-	@IsString()
+	@IsNumber()
 	@IsNotEmpty()
 	toId: number;
+
+	@IsNumber()
+	@IsNotEmpty()
+	sessionId: number;
+
+	@IsEnum(FeedbackType)
+	@IsNotEmpty()
+	type: FeedbackType;
 }
 
 export class UpdateFeedbackDto {
 	@IsOptional()
 	@IsString()
-	comment?: string;
+	comments?: string;
 
 	@IsOptional()
 	@IsNumber()
@@ -44,4 +54,12 @@ export class UpdateFeedbackDto {
 	@IsNumber()
 	@IsOptional()
 	toId: number;
+
+	@IsNumber()
+	@IsOptional()
+	sessionId: number;
+
+	@IsEnum(FeedbackType)
+	@IsOptional()
+	type: FeedbackType;
 }
