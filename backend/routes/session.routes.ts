@@ -5,12 +5,11 @@ import SessionRepository from "../repositories/session.repository";
 import { SessionService } from "../services/session.service";
 import { UserSessionRepository } from "../repositories/user-session.repository";
 import { userService } from "./user.route";
+import { trainingService } from "./training.route";
 
 
 const sessionRepository = new SessionRepository(dataSource.getRepository("Session"));
-const userSessionRepository=new UserSessionRepository(dataSource.getRepository("UserSession"))
-
-const sessionService= new SessionService(sessionRepository);
+const sessionService= new SessionService(sessionRepository,trainingService);
 const sessionController=new SessionController(sessionService);
 
 const sessionRouter=Router();

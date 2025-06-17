@@ -6,7 +6,7 @@ import LoggerService from "./services/logger.service";
 import userRouter from "./routes/user.route";
 import authRouter from "./routes/auth.routes";
 import errorMiddleware from "./middlewares/errorMiddleware";
-import authMiddleware from "./middlewares/auth.middleware";
+import authMiddleware from "./middlewares/auth.middleware"
 import sessionRouter from "./routes/session.routes";
 import materialRouter from "./routes/material.route";
 import trainingRouter from "./routes/training.route";

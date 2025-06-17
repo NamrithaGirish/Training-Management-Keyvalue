@@ -9,14 +9,23 @@ import { CreateUserSessionDto } from "../dto/user-session.dto";
 import { UserSession } from "../entities/user-session.entity";
 import UserRepository from "../repositories/user.repository";
 import UserService from "./user.service";
+import TrainingService from "./training.service";
+import { error } from "console";
 
 export class SessionService {
   private logger = LoggerService.getInstance("UserService()");
-  constructor(private sessionRepository: SessionRepository) {}
+  constructor(private sessionRepository: SessionRepository,private trainingService:TrainingService) {}
   
 
   async createSession(sessionDto: CreateSessionDto): Promise<Session> {
     const session = plainToInstance(Session, instanceToPlain(sessionDto));
+    const training=await this.trainingService.getTrainingById(sessionDto.program_id)
+    if(training){
+        session.training=training;
+    }
+    else{
+        throw new HTTPException(400,"No such training")
+    }
     const result = await this.sessionRepository.create(session);
     this.logger.info(`Session created with ID: ${result.id}`);
 
@@ -57,7 +66,14 @@ export class SessionService {
     }
 
     const sessionData = plainToInstance(Session, instanceToPlain(sessionDto));
-
+    sessionData.training=await this.trainingService.getTrainingById(sessionDto.program_id);
+    const training=await this.trainingService.getTrainingById(sessionDto.program_id)
+    if(training){
+        sessionData.training=training;
+    }
+    else{
+        throw new HTTPException(400,"No such training")
+    }
     const result = await this.sessionRepository.update(id, sessionData);
     this.logger.info(`Session updated with ID: ${result.id}`);
     return result;
