@@ -84,7 +84,7 @@ const SelectModal: React.FC<SelectModalProps> = ({
     );
 };
 
-const SessionDetailsForm = () => {
+const CreateSession = () => {
     const [sessionName, setSessionName] = useState("");
     const [sessionDescription, setSessionDescription] = useState("");
     const [showTrainerModal, setShowTrainerModal] = useState(false);
@@ -155,16 +155,16 @@ const SessionDetailsForm = () => {
                 {/* Buttons */}
                 <div className="flex justify-end gap-4">
                     <button
+                        onClick={handleSubmit}
+                        className="bg-itemColor border text-white border-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
+                    >
+                        Submit
+                    </button>
+                    <button
                         onClick={handleCancel}
                         className="bg-white text-black px-4 py-2 rounded hover:opacity-90"
                     >
                         Cancel
-                    </button>
-                    <button
-                        onClick={handleSubmit}
-                        className="bg-black border text-white border-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-                    >
-                        Submit
                     </button>
                 </div>
 
@@ -195,4 +195,4 @@ const SessionDetailsForm = () => {
         </Layout>
     );
 };
-export default SessionDetailsForm;
+export default CreateSession;
