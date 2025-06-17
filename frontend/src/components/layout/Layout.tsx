@@ -8,7 +8,7 @@ const LightEffect = () => {
                 <div className="absolute left-0 -translate-x-1/2 w-70 h-70 bg-red-500 rounded-full blur-[120px] animate-[pulse_4s_ease-in-out_infinite]"></div>
                 <div className="absolute right-0 translate-x-1/2 w-70 h-70 bg-blue-500 rounded-full blur-[120px] animate-[pulse_4s_ease-in-out_2s_infinite]"></div>
             </div>
-            <h1 className="absolute w-full text-center text-[1000%] uppercase font-bold bg-gradient-to-b from-blue-500  to-red-500 text-transparent bg-clip-text opacity-30 scale-100">
+            <h1 className="absolute w-full text-center text-[1000%] uppercase font-bold bg-gradient-to-b from-blue-600  to-red-600 text-transparent bg-clip-text opacity-20 scale-100">
                 Keyvalue
             </h1>
         </div>

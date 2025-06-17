@@ -1,72 +1,178 @@
 import { useState } from "react";
 import LoginInput from "./LoginInput";
+import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../../api-service/auth/login.api";
 
 type SliderPosition = "left" | "right";
 
-const LoginForm = () => {
+type LoginFormSectionProps = {
+    type?: string;
+    children?: React.ReactNode;
+    onClick?: () => void;
+};
+
+const KVLogo = () => {
+    return (
+        <div className="flex w-60">
+            <img src="images/kv-logo.png" alt="" />
+        </div>
+    );
+};
+
+const LoginFormSection: React.FC<LoginFormSectionProps> = ({
+    type = "signin",
+    children,
+    onClick,
+}) => {
+    return (
+        <form
+            onSubmit={() => {}}
+            className="w-[50%] h-full flex flex-col items-center justify-center gap-8 px-2 text-white"
+        >
+            <h2 className="text-[40px] font-bold">
+                {type == "signup" ? "Sign Up" : "Sign In"}
+            </h2>
+            <div className="w-[80%] flex flex-col items-center justify-center gap-5">
+                {children}
+            </div>
+            {type == "signin" && (
+                <p className="cursor-pointer hover:text-gray-300 transition-all duration-300">
+                    Forget Password?
+                </p>
+            )}
+            <button
+                type="button"
+                onClick={onClick}
+                className="border border-borderColor bg-white hover:bg-gray-300 hover:scale-105 transition-all duration-300 text-black px-10 py-2 rounded-md uppercase text-md"
+            >
+                {type?.toUpperCase()}
+            </button>
+        </form>
+    );
+};
+
+const LoginFormSlider = () => {
     const [sliderPosition, setSliderPosition] =
         useState<SliderPosition>("left");
-
+    const formText = sliderPosition == "left" ? "Welcome text" : "Welcome back";
+    const buttonText = sliderPosition == "left" ? "Signup" : "Signin";
     const toggleSlider = () => {
         sliderPosition == "left"
             ? setSliderPosition("right")
             : setSliderPosition("left");
     };
+    return (
+        <div
+            className={`w-[50%] h-full flex flex-col items-center justify-center absolute left-0 bg-gradient-to-br from-blue-700 to-red-600 gap-10 duration-400 text-white ${
+                sliderPosition == "left" ? "rounded-r-3xl" : "rounded-l-3xl"
+            } ${sliderPosition == "right" && "translate-x-[100%]"}`}
+        >
+            <KVLogo />
+            <p className="text-2xl">{formText}</p>
+            <button
+                className="border border-white hover:bg-white hover:text-black transition-all duration-300 px-8 py-1.5 rounded-md uppercase"
+                onClick={toggleSlider}
+            >
+                {buttonText}
+            </button>
+        </div>
+    );
+};
 
-    const formText = sliderPosition == "left" ? "Welcome text" : "Welcome back";
+const LoginForm = () => {
+    const [signinData, setSigninData] = useState({
+        username: "",
+        password: "",
+    });
+
+    const [signupData, setSignupData] = useState({
+        name: "",
+        email: "",
+        password: "",
+    });
+
+    const [login, { isLoading }] = useLoginMutation();
+
+    const navigate = useNavigate();
+
+    const handleLogin = () => {
+        login({ username: signinData.username, password: signinData.password })
+            .unwrap()
+            .then(() => {
+                setSigninData({ username: "", password: "" });
+                navigate("/dashboard");
+            })
+            .catch(() => {
+                setSigninData({ username: "", password: "" });
+                navigate("/program");
+            });
+    };
 
     return (
-        <div className="flex items-center justify-center w-[650px] h-[400px] bg-white rounded-md shadow-md overflow-hidden relative">
-            <form
-                onSubmit={() => {}}
-                className="w-[50%] h-full flex flex-col items-center justify-center gap-8 text-gray-700 px-2"
-            >
-                <h2 className="text-[40px] font-bold">Sign Up</h2>
-                <div className="w-[80%] flex flex-col items-center justify-center gap-5">
-                    <LoginInput name="name" placeholder="Name" />
-                    <LoginInput name="email" placeholder="Email" />
-                    <LoginInput name="password" type="password" placeholder="Password" />
-                </div>
-                <button
-                    type="button"
-                    className="border-2 bg-orange-400 text-white px-8 py-1.5 rounded-md uppercase"
-                >
-                    Signup
-                </button>
-            </form>
+        <div className="flex items-center justify-center w-[750px] h-[500px] bg-[rgba(0, 0, 0, 0.2)] backdrop-blur-xl rounded-md shadow-md overflow-hidden relative border border-borderColor">
+            <LoginFormSection type="signup">
+                <LoginInput
+                    name="name"
+                    placeholder="Name"
+                    value={signupData.name}
+                    onChange={(event) =>
+                        setSignupData({
+                            ...signupData,
+                            name: event.target.value,
+                        })
+                    }
+                />
+                <LoginInput
+                    name="email"
+                    placeholder="Email"
+                    value={signupData.email}
+                    onChange={(event) =>
+                        setSignupData({
+                            ...signupData,
+                            email: event.target.value,
+                        })
+                    }
+                />
+                <LoginInput
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    value={signupData.password}
+                    onChange={(event) =>
+                        setSignupData({
+                            ...signupData,
+                            password: event.target.value,
+                        })
+                    }
+                />
+            </LoginFormSection>
 
-            <form
-                onSubmit={() => {}}
-                className="w-[50%] h-full flex flex-col items-center justify-center gap-8 text-gray-700 px-2"
-            >
-                <h2 className="text-[40px] font-bold">Sign In</h2>
-                <div className="w-[80%] flex flex-col items-center justify-center gap-5">
-                    <LoginInput name="username" placeholder="Username" />
-                    <LoginInput name="password" type="password" placeholder="Password"/>
-                </div>
-                <p className="mt-[-5px] text-sm">Forget Password?</p>
-                <button
-                    type="button"
-                    className="border-2 bg-orange-400 text-white px-8 py-1.5 rounded-md uppercase"
-                >
-                    Signin
-                </button>
-            </form>
-
-            <div
-                className={`w-[50%] h-full flex flex-col items-center justify-center absolute left-0 bg-orange-400 gap-10 duration-400 text-white rounded-${
-                    sliderPosition == "left" ? "r" : "l"
-                }-2xl ${sliderPosition == "right" && "translate-x-[100%]"}`}
-            >
-                <h3 className="text-4xl">Logo</h3>
-                <p className="">{formText}</p>
-                <button
-                    className="border-2 px-8 py-1.5 rounded uppercase"
-                    onClick={toggleSlider}
-                >
-                    Signup
-                </button>
-            </div>
+            <LoginFormSection type="signin" onClick={handleLogin}>
+                <LoginInput
+                    name="username"
+                    placeholder="Username"
+                    value={signinData.username}
+                    onChange={(event) =>
+                        setSigninData({
+                            ...signinData,
+                            username: event.target.value,
+                        })
+                    }
+                />
+                <LoginInput
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    value={signinData.password}
+                    onChange={(event) =>
+                        setSigninData({
+                            ...signinData,
+                            password: event.target.value,
+                        })
+                    }
+                />
+            </LoginFormSection>
+            <LoginFormSlider />
         </div>
     );
 };
