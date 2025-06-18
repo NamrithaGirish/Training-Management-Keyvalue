@@ -22,10 +22,9 @@ const TrainingDetails = () => {
         id: trainingId,
     });
 
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     const decoded: { isAdmin: boolean }  = jwtDecode(token || "");
     const isAdmin = decoded.isAdmin;
-
 
     const [deleteTraining] = useDeleteTrainingMutation();
     useEffect(() => {
@@ -79,7 +78,6 @@ const TrainingDetails = () => {
                     endDate="2023-10-31"
                 />
                 <EventList
-                    isAdmin={isAdmin}
                     heading="Sessions"
                     showCreateButton={isAdmin}
                     onCreateClick={() => navigate("session/create")}

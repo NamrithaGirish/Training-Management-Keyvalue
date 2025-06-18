@@ -15,8 +15,14 @@ export const userApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+        getUserRoleInSession: builder.query({
+            query: (payload) => ({
+                url: `/session/${payload.sessionId}/roles/${payload.userId}`,
+                method: "GET",
+            }),
+        }),
     }),
 });
 
-export const { useGetUserDashboardDataQuery, useGetUserByIdQuery } = userApi;
+export const { useGetUserDashboardDataQuery, useGetUserByIdQuery, useGetUserRoleInSessionQuery } = userApi;
 

@@ -111,8 +111,9 @@ const LoginForm = () => {
                 const decoded: { id: number; isAdmin: boolean } = jwtDecode(
                     data.accessToken
                 );
+                const isAdmin = decoded.isAdmin; 
 
-                if (decoded.isAdmin) {
+                if (isAdmin) {
                     navigate("/adminDashboard");
                 } else {
                     navigate(`/dashboard/${decoded.id}`);

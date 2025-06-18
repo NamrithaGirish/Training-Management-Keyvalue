@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import { jwtDecode } from "jwt-decode";
+import { Layout } from "lucide-react";
 import { useState } from "react";
 import { CiPlay1 } from "react-icons/ci";
 import { FaSearch } from "react-icons/fa";
@@ -34,7 +36,6 @@ type EventItem = {
 
 type EventListProps = {
     heading: string;
-    isAdmin: boolean;
     showCreateButton?: boolean;
     onCreateClick?: () => void;
     data?: EventProps[];
@@ -56,7 +57,7 @@ export const formatTrainingList = (trainingDetailsList: Array<EventProps>) => {
     return formattedTrainingList;
 };
 
-const EventListItem: React.FC<EventItem> = ({ item, heading, isAdmin }) => {
+const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
     const navigate = useNavigate();
     return (
         <div
@@ -64,8 +65,7 @@ const EventListItem: React.FC<EventItem> = ({ item, heading, isAdmin }) => {
             onClick={() =>
                 heading == "session"
                     ? navigate(`session/${item.id}`)
-                    : isAdmin ? navigate(`/training/${item.id}`)
-                        : navigate(`training/${item.id}`)
+                    : navigate(`/training/${item.id}`)
             }
         >
             <div className="flex items-center justify-between">
@@ -121,7 +121,6 @@ const EventListItem: React.FC<EventItem> = ({ item, heading, isAdmin }) => {
 
 const EventList: React.FC<EventListProps> = ({
     heading,
-    isAdmin,
     showCreateButton = false,
     onCreateClick,
     data,
@@ -138,6 +137,9 @@ const EventList: React.FC<EventListProps> = ({
                 statusFilter.toLowerCase() == "all" ||
                 item.status === statusFilter)
     );
+    const token = localStorage.getItem("token")
+    const decoded: { isAdmin: boolean } = jwtDecode(token || "");
+    const isAdmin = decoded.isAdmin;
     return (
         <div className=" text-white w-full">
             <div className="flex flex-col items-center border border-borderColor px-2 py-4 rounded-lg bg-cardColor">
