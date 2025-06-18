@@ -1,5 +1,5 @@
 import { Status } from "../entities/session.entity";
-import { TrainingUserRole } from "../entities/training-users.entity";
+import { Role } from "../entities/training-users.entity";
 import HTTPException from "../exceptions/http.exception";
 import { sessionService } from "../routes/session.routes";
 import { trainingService } from "../routes/training.route";
@@ -83,7 +83,7 @@ export default class AnalyticsService {
 			totalSessionCount: totalSessions.length,
 			upcomingSessionsCount: upcomingSessions.length,
 			totalAttendees: program.members.filter(
-				(member) => member.role === TrainingUserRole.CANDIDATE
+				(member) => member.role === Role.CANDIDATE
 			).length,
 			progress: progress,
 		};
