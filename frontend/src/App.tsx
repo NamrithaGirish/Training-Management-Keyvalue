@@ -17,13 +17,11 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import UpdateSession from "./pages/session/UpdateSession";
 import Calendar from "./components/calendar/Calendar";
-// import Calendar from "./components/calendar/Calender1";
-// import Calendar from "./components/calendar/Calendar";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Calendar />,
+    element: <Login />,
     errorElement: <NotFound />,
   },
   {
@@ -50,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: ":trainingId/update",
         element: <UpdateTraining />,
+      },
+      {
+        path: ":trainingId/calendar",
+        element: <Calendar />,
       },
       {
         path: ":trainingId/session",

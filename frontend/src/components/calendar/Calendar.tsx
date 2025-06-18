@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDrag, useDrop, DndProvider } from "react-dnd";
@@ -196,30 +195,36 @@ const Calendar = () => {
   // 🧩 Handle drop on calendar date
   const handleDropToCalendar = (date: any, session: any) => {
     const key = date.format("YYYY-MM-DD");
-
     setCalendarItems((prev) => {
-      const existing = prev[key] || [];
+      console.log("prev", prev);
+      const existing = prev[key] ? [...prev[key]] : [];
 
+      // Reordering within same cell
       if (
         session.fromCalendar &&
         session.dateKey === key &&
         session.reorderToIndex !== undefined
       ) {
+        console.log("Reordering session in calendar");
         const reordered = [...existing];
         const [moved] = reordered.splice(session.calendarIndex, 1);
         reordered.splice(session.reorderToIndex, 0, moved);
         return { ...prev, [key]: reordered };
       }
 
+      // Rescheduling to different date
       if (session.fromCalendar && session.dateKey !== key) {
         const updated = { ...prev };
-        const fromList = updated[session.dateKey] || [];
-        fromList.splice(session.calendarIndex, 1);
+        const fromList = updated[session.dateKey]
+          ? [...updated[session.dateKey]]
+          : [];
+        const removed = fromList.splice(session.calendarIndex, 1); // remove from old date
         updated[session.dateKey] = fromList;
-        updated[key] = [...(updated[key] || []), { ...session }];
+        updated[key] = [...existing, removed[0]];
         return updated;
       }
 
+      // From pool to calendar
       if (!session.fromCalendar) {
         return { ...prev, [key]: [...existing, { ...session }] };
       }
