@@ -108,7 +108,7 @@ const SessionDetails = () => {
                                     feedback: { comments: string },
                                     index: number
                                 ) => (
-                                    <div className="border-b border-gray-600 pb-4">
+                                    <div key={index} className="border-b border-gray-600 pb-4">
                                         <h3 className="text-gray-400 text-sm mb-2">
                                             Feedback {index + 1}
                                         </h3>
