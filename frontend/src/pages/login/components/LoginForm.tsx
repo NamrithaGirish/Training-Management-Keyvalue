@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../../api-service/auth/login.api";
 import Button, { ButtonType } from "../../../components/button/Button";
 import { toast } from "react-toastify";
-import {jwtDecode} from "jwt-decode";
+
+import { jwtDecode } from "jwt-decode";
+
 
 type SliderPosition = "left" | "right";
 
@@ -105,21 +107,17 @@ const LoginForm = () => {
             .then((data) => {
                 localStorage.setItem("token", data.accessToken);
                 setSigninData({ username: "", password: "" });
-                
 
-                const decoded = jwtDecode(data.accessToken);
-                console.log(decoded);
-                const id = decoded.id;
-                console.log(decoded.isAdmin);
+                const decoded: { id: number; isAdmin: boolean } = jwtDecode(
+                    data.accessToken
+                );
+
                 if (decoded.isAdmin) {
-                    navigate("/dashboard");
+                    navigate("/adminDashboard");
+                } else {
+                    navigate(`/dashboard/${decoded.id}`);
                 }
 
-                else {
-                    navigate(`/commonDashboard/${id}`)
-                }
-
-                
             })
             .catch((error) => {
                 setSigninData({ username: "", password: "" });

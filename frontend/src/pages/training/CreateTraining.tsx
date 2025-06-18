@@ -3,13 +3,12 @@ import Button, { ButtonType } from "../../components/button/Button";
 import Layout from "../../components/layout/Layout";
 import FormInput from "../../components/formInput/FormInput";
 import { useState, type FormEvent } from "react";
-import type { TrainingDetailsPayload } from "../../api-service/training/training.types";
 import { useNavigate } from "react-router-dom";
 import { useCreateTrainingMutation } from "../../api-service/training/training.api";
 
 const CreateTraining = () => {
     const [trainingDetails, setTrainingDetails] =
-        useState<TrainingDetailsPayload>({
+        useState({
             title: "",
             description: "",
             startDate: "",
@@ -17,7 +16,7 @@ const CreateTraining = () => {
         });
 
     const navigate = useNavigate();
-    const [createTraining] = useCreateTrainingMutation();
+    const [createTraining, { isLoading }] = useCreateTrainingMutation();
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -25,7 +24,7 @@ const CreateTraining = () => {
         createTraining(trainingDetails)
             .unwrap()
             .then(() => {
-                navigate("/dashboard");
+                navigate("/adminDashboard");
             })
             .catch((error) => {
                 console.log(error);
@@ -33,7 +32,7 @@ const CreateTraining = () => {
     };
 
     return (
-        <Layout title="Create Training">
+        <Layout title="Create Training" isLoading={isLoading}>
             <form
                 onSubmit={handleSubmit}
                 className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded"
@@ -98,14 +97,14 @@ const CreateTraining = () => {
                         label="Add Candidates to Pool"
                         onClick={() => navigate("/createPool/candidate")}
                     />
-                    <ActionButton
+                    {/* <ActionButton
                         label="Create New Session"
                         onClick={() => navigate("/session/create")}
                     />
                     <ActionButton
                         label="Add Sessions to Schedule"
                         onClick={() => {}}
-                    />
+                    /> */}
                 </div>
 
                 <div className="flex justify-end gap-4">

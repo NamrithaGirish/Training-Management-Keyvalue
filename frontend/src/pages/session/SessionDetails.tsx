@@ -19,7 +19,7 @@ const SessionDetails = () => {
     const navigate = useNavigate();
     const { trainingId, sessionId } = useParams();
     const { data: sessionDetailsData } = useGetSessionByIdQuery({ id: sessionId });
-    const [deleteSession] = useDeleteSessionMutation();
+    const [deleteSession, { isLoading }] = useDeleteSessionMutation();
 
     useEffect(() => {
         if(!sessionDetailsData)
@@ -30,7 +30,7 @@ const SessionDetails = () => {
         })
     }, [sessionDetailsData])
 
-    const userRole: UserRole = UserRoleType.TRAINER;   
+    const userRole: UserRole = UserRoleType.CANDIDATE;   
 
     const checkRole = (roleType: UserRole) => {
         return userRole == roleType;
@@ -42,7 +42,7 @@ const SessionDetails = () => {
         return (<></>);
 
     return (
-        <Layout title={sessionDetailsData.title} endAdornments={
+        <Layout title={sessionDetailsData.title} isLoading={isLoading} endAdornments={
             <div className="flex gap-3">
                     <Button
                         variant={ButtonType.SECONDARY}

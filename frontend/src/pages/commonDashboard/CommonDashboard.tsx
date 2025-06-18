@@ -1,30 +1,16 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useGetTrainingListQuery } from "../../api-service/training/training.api";
+
+import { useGetUserDashboardDataQuery } from "../../api-service/user/user.api";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
 import EventList, { formatTrainingList } from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
-import { useGetTrainingByUserIdQuery } from "../../api-service/user/user.api";
+import { useParams } from "react-router-dom";
 
 const CommonDashboard = () => {
-    const navigate = useNavigate();
-    const { id } = useParams<{ id: string }>();
-
-    const { data: trainingDetailsList, isLoading, error } = useGetTrainingByUserIdQuery(id, {
-        skip: !id,
-    });
-
-    if (isLoading) {
-        return <Layout title="Your Dashboard"><p className="text-white p-5">Loading...</p></Layout>;
-    }
-
-    if (error) {
-        return <Layout title="Your Dashboard"><p className="text-red-500 p-5">Failed to load training data.</p></Layout>;
-    }
-
-    const formattedTrainings = formatTrainingList(trainingDetailsList?.totalPrograms || []);
-
+    const { userId } = useParams();
+    const { data: userDashboardData, isLoading } = useGetUserDashboardDataQuery({ id: userId  });
+    
     return (
-        <Layout title="Your Dashboard">
+        <Layout title="Dashboard" isLoading={isLoading}>
             <div className="flex flex-col items-center justify-center gap-10 p-5">
                 <DashboardCardList
                     data={[
@@ -36,10 +22,11 @@ const CommonDashboard = () => {
                     ]}
                 />
                 <EventList
-                    isAdmin={false}
+
                     heading="Trainings"
                     showCreateButton={false}
-                    data={formattedTrainings}
+                    data={formatTrainingList(userDashboardData?.totalPrograms)}
+
                 />
             </div>
         </Layout>

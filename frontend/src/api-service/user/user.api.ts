@@ -1,19 +1,22 @@
-import baseApi, { ApiTagType } from "../baseApi";
 
-export const trainingApi = baseApi.injectEndpoints({
+import baseApi from "../baseApi";
+
+export const userApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-    
-        getTrainingByUserId: builder.query<any, string>({
-        query: (id) => ({
-            url: `/analytics/users/${id}`,
-            method: "GET",
+        getUserDashboardData: builder.query({
+            query: (payload) => ({
+                url: `/analytics/users/${payload.id}`,
+                method: "GET",
+            }),
         }),
-  providesTags: [ApiTagType.TRAINING],
-}),
-
+        getUserById: builder.query({
+            query: (payload) => ({
+                url: `/users/${payload.id}`,
+                method: "GET",
+            }),
+        }),
     }),
 });
 
-export const {
-    useGetTrainingByUserIdQuery
-} = trainingApi;
+export const { useGetUserDashboardDataQuery, useGetUserByIdQuery } = userApi;
+
