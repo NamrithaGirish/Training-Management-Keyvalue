@@ -1,3 +1,4 @@
+
 import { useGetUserDashboardDataQuery } from "../../api-service/user/user.api";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
 import EventList, { formatTrainingList } from "../../components/eventList/EventList";
@@ -21,9 +22,11 @@ const CommonDashboard = () => {
                     ]}
                 />
                 <EventList
+
                     heading="Trainings"
                     showCreateButton={false}
                     data={formatTrainingList(userDashboardData?.totalPrograms)}
+
                 />
             </div>
         </Layout>

@@ -1,3 +1,4 @@
+
 import baseApi from "../baseApi";
 
 export const userApi = baseApi.injectEndpoints({
@@ -18,3 +19,4 @@ export const userApi = baseApi.injectEndpoints({
 });
 
 export const { useGetUserDashboardDataQuery, useGetUserByIdQuery } = userApi;
+

@@ -1,6 +1,5 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   ManyToOne,
   Column,
   Unique,
@@ -8,14 +7,7 @@ import {
 import { User } from "./user.entity";
 import { Session } from "./session.entity";
 import AbstractBaseEntity from "./abstract.entity";
-
-export enum Role{
-Candidate="Candidate",
-Trainer="Trainer",
-Moderator="Moderator",
-Admin="Admin"
-}
-
+import { Role } from "./training-users.entity";
 
 @Entity()
 @Unique(["user", "session"]) // prevent duplicate pairs

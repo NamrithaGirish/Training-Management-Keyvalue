@@ -15,8 +15,12 @@ import CreateSession from "./pages/session/CreateSession";
 import SessionDetails from "./pages/session/SessionDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
+
 import UpdateSession from "./pages/session/UpdateSession";
 import CommonDashboard from "./pages/commonDashboard/CommonDashboard";
+
+import CommonDashboard from "./pages/commonDashboard/CommonDashboard";
+
 
 const router = createBrowserRouter([
     {

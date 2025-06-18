@@ -14,6 +14,7 @@ const SessionDetails = () => {
         userRoles: []
     });
 
+
     
     const navigate = useNavigate();
     const { trainingId, sessionId } = useParams();

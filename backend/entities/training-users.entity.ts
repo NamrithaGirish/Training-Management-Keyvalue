@@ -10,9 +10,9 @@ import {
 import AbstractBaseEntity from "./abstract.entity";
 import { Training } from "./training.entity";
 import { User } from "./user.entity";
-// import { User } from "./user.entity";
 
-export enum TrainingUserRole {
+
+export enum Role {
   CANDIDATE = "candidate",
   ADMIN = "admin",
   TRAINER = "trainer",
@@ -29,8 +29,8 @@ export class TrainingUser extends AbstractBaseEntity {
 
   @Column({
     type: "enum",
-    enum: TrainingUserRole,
-    default: TrainingUserRole.CANDIDATE,
+    enum: Role,
+    default: Role.CANDIDATE,
   })
-  role: TrainingUserRole;
+  role: Role;
 }
