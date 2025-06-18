@@ -46,7 +46,7 @@ async findTodaySessions(): Promise<Session[]> {
   console.log("helooooooooo",startOfDay)
   return this.repository.find({
     where: {
-      startTime: Between(startOfDay, endOfDay),
+      date: today,
       status: "Scheduled" as Status,
     },
     relations: {
