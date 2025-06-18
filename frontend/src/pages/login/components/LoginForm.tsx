@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../../api-service/auth/login.api";
 import Button, { ButtonType } from "../../../components/button/Button";
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 type SliderPosition = "left" | "right";
 
@@ -104,7 +105,15 @@ const LoginForm = () => {
             .then((data) => {
                 localStorage.setItem("token", data.accessToken);
                 setSigninData({ username: "", password: "" });
-                navigate("/dashboard");
+                const decoded: { id: number; isAdmin: boolean } = jwtDecode(
+                    data.accessToken
+                );
+
+                if (decoded.isAdmin) {
+                    navigate("/adminDashboard");
+                } else {
+                    navigate(`/dashboard/${decoded.id}`);
+                }
             })
             .catch((error) => {
                 setSigninData({ username: "", password: "" });

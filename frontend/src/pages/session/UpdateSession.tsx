@@ -118,7 +118,7 @@ const UpdateSession = () => {
     const [selectedTrainer, setSelectedTrainer] = useState<string[]>([]);
     const [selectedModerators, setSelectedModerators] = useState<string[]>([]);
 
-    const [updateSession] = useUpdateSessionMutation();
+    const [updateSession, { isLoading }] = useUpdateSessionMutation();
 
     const handleCancel = () => {
         setSelectedTrainer([]);
@@ -134,7 +134,7 @@ const UpdateSession = () => {
     };
 
     return (
-        <Layout title="Session Details Form">
+        <Layout title="Session Details Form" isLoading={isLoading}>
             <div className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded">
                 <FormInput
                     name="session-name"

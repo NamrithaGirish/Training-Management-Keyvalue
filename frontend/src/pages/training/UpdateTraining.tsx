@@ -8,11 +8,10 @@ import {
     useGetTrainingByIdQuery,
 } from "../../api-service/training/training.api";
 import { useEffect, useState, type FormEvent } from "react";
-import type { TrainingDetailsPayload } from "../../api-service/training/training.types";
 
 const UpdateTraining = () => {
     const [trainingDetails, setTrainingDetails] =
-        useState<TrainingDetailsPayload>({
+        useState({
             title: "",
             description: "",
             startDate: "",
@@ -21,7 +20,7 @@ const UpdateTraining = () => {
 
     const { trainingId } = useParams();
     const navigate = useNavigate();
-    const [updateTraining] = useUpdateTrainingMutation();
+    const [updateTraining, { isLoading }] = useUpdateTrainingMutation();
     const { data: trainingDetailsData } = useGetTrainingByIdQuery({
         id: trainingId,
     });
@@ -49,7 +48,7 @@ const UpdateTraining = () => {
     }, [trainingDetailsData]);
 
     return (
-        <Layout title="Update Training">
+        <Layout title="Update Training" isLoading={isLoading}>
             <form
                 onSubmit={handleSubmit}
                 className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded"

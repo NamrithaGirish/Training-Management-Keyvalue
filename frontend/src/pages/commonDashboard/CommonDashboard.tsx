@@ -1,16 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { useGetTrainingListQuery } from "../../api-service/training/training.api";
+import { useGetUserDashboardDataQuery } from "../../api-service/user/user.api";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
-import EventList, {
-    formatTrainingList,
-} from "../../components/eventList/EventList";
+import EventList, { formatTrainingList } from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
+import { useParams } from "react-router-dom";
 
-const AdminDashboard = () => {
-    const navigate = useNavigate();
-    const { data: trainingDetailsList, isLoading } = useGetTrainingListQuery({});
+const CommonDashboard = () => {
+    const { userId } = useParams();
+    const { data: userDashboardData, isLoading } = useGetUserDashboardDataQuery({ id: userId  });
+    
     return (
-        <Layout title="Admin Dashboard" isLoading={isLoading}>
+        <Layout title="Dashboard" isLoading={isLoading}>
             <div className="flex flex-col items-center justify-center gap-10 p-5">
                 <DashboardCardList
                     data={[
@@ -23,13 +22,12 @@ const AdminDashboard = () => {
                 />
                 <EventList
                     heading="Trainings"
-                    showCreateButton={true}
-                    onCreateClick={() => navigate("/training/create")}
-                    data={formatTrainingList(trainingDetailsList)}
+                    showCreateButton={false}
+                    data={formatTrainingList(userDashboardData?.totalPrograms)}
                 />
             </div>
         </Layout>
     );
 };
 
-export default AdminDashboard;
+export default CommonDashboard;

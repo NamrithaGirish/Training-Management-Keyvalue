@@ -16,6 +16,7 @@ import SessionDetails from "./pages/session/SessionDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import UpdateSession from "./pages/session/UpdateSession";
+import CommonDashboard from "./pages/commonDashboard/CommonDashboard";
 
 const router = createBrowserRouter([
     {
@@ -24,9 +25,24 @@ const router = createBrowserRouter([
         errorElement: <NotFound />,
     },
     {
-        path: "/dashboard",
+        path: "/adminDashboard",
         element: <AdminDashboard />,
         errorElement: <NotFound />,
+    },
+    {
+        path: "/dashboard/:userId",
+        element: <Outlet />,
+        children: [
+            {
+                index: true,
+                element: <CommonDashboard />
+            },
+            {
+                path: "training/:trainingId",
+                element: <TrainingDetails />
+            }
+        ],
+        errorElement: <NotFound />
     },
     {
         path: "/training",
