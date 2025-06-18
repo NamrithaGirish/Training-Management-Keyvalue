@@ -3,6 +3,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useDrag, useDrop, DndProvider } from "react-dnd";
 import dayjs from "dayjs";
 import { useGetTrainingByIdQuery } from "../../api-service/training/training.api";
+import { useParams } from "react-router-dom";
 
 // 🎨 Color classes for random session colors
 const colorClasses = [
@@ -174,8 +175,9 @@ const Calendar = () => {
       return saved ? JSON.parse(saved) : {};
     }
   );
+  const { trainingId } = useParams();
   const { data: trainingDetails, isLoading } = useGetTrainingByIdQuery({
-    id: 4,
+    id: parseInt(trainingId || "0", 10),
   });
 
   useEffect(() => {
