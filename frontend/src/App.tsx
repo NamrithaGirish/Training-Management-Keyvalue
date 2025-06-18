@@ -19,7 +19,6 @@ import store from "./store/store";
 import UpdateSession from "./pages/session/UpdateSession";
 import CommonDashboard from "./pages/commonDashboard/CommonDashboard";
 
-import CommonDashboard from "./pages/commonDashboard/CommonDashboard";
 
 
 const router = createBrowserRouter([
