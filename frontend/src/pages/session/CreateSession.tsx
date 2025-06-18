@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
-import Layout from "../layout/Layout";
-import FormInput from "../formInput/FormInput";
-import ActionButton from "../actionButton/ActionButton";
+import { X } from "lucide-react";
+import Layout from "../../components/layout/Layout";
+import FormInput from "../../components/formInput/FormInput";
+import ActionButton from "../../components/actionButton/ActionButton";
+import Button, { ButtonType } from "../../components/button/Button";
+import { useCreateSessionMutation } from "../../api-service/session/session.api";
+import { useNavigate, useParams } from "react-router-dom";
 
 type SelectModalProps = {
     title: string;
@@ -35,6 +38,7 @@ const SelectModal: React.FC<SelectModalProps> = ({
             setLocalSelection([option]);
         }
     };
+
     return (
         <div className="fixed inset-0 w-full h-full bg-modalBgColor flex items-center justify-center z-50">
             <div className="bg-cardColor border border-borderColor rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
@@ -42,9 +46,9 @@ const SelectModal: React.FC<SelectModalProps> = ({
                     <h2 className="text-lg font-semibold text-white">
                         {title}
                     </h2>
-                    <button onClick={onClose}>
+                    <Button onClick={onClose}>
                         <X className="text-gray-300 hover:text-white" />
-                    </button>
+                    </Button>
                 </div>
                 <div className="space-y-2">
                     {options.map((option) => (
@@ -63,21 +67,18 @@ const SelectModal: React.FC<SelectModalProps> = ({
                     ))}
                 </div>
                 <div className="flex justify-end gap-4 mt-6">
-                    <button
-                        onClick={onClose}
-                        className="bg-white text-black px-4 py-1 rounded hover:opacity-90"
-                    >
-                        Cancel
-                    </button>
-                    <button
+                    <Button
+                        variant={ButtonType.PRIMARY}
                         onClick={() => {
                             onSelect(localSelection);
                             onClose();
                         }}
-                        className="bg-black border text-white border-white px-4 py-1 rounded hover:bg-white hover:text-black transition"
                     >
                         Save
-                    </button>
+                    </Button>
+                    <Button onClick={onClose} variant={ButtonType.SECONDARY}>
+                        Cancel
+                    </Button>
                 </div>
             </div>
         </div>
@@ -85,61 +86,91 @@ const SelectModal: React.FC<SelectModalProps> = ({
 };
 
 const CreateSession = () => {
-    const [sessionName, setSessionName] = useState("");
-    const [sessionDescription, setSessionDescription] = useState("");
+    const [sessionDetails, setSessionDetails] = useState({
+        program_id: 4,
+        status: "InProgress",
+        title: "s1",
+        description: "desc",
+        startTime: "2020-07-10",
+        endTime: "2025-07-05",
+    });
+
+    const { trainingId } = useParams();
+    const [duration, setDuration] = useState(0);
+    const navigate = useNavigate();
+
     const [showTrainerModal, setShowTrainerModal] = useState(false);
     const [showModeratorModal, setShowModeratorModal] = useState(false);
     const [selectedTrainer, setSelectedTrainer] = useState<string[]>([]);
     const [selectedModerators, setSelectedModerators] = useState<string[]>([]);
-    const dummyTrainers = Array.from(
-        { length: 50 },
-        (_, i) => `Trainer ${i + 1}`
-    );
-    const dummyModerators = Array.from(
-        { length: 100 },
-        (_, i) => `Moderator ${i + 1}`
-    );
+
+    const [createSession] = useCreateSessionMutation();
+
+    // const dummyTrainers = Array.from(
+    //     { length: 50 },
+    //     (_, i) => `Trainer ${i + 1}`
+    // );
+    // const dummyModerators = Array.from(
+    //     { length: 100 },
+    //     (_, i) => `Moderator ${i + 1}`
+    // );
+
     const handleCancel = () => {
-        setSessionName("");
-        setSessionDescription("");
         setSelectedTrainer([]);
         setSelectedModerators([]);
     };
 
     const handleSubmit = () => {
-        console.log({
-            sessionName,
-            sessionDescription,
-            selectedTrainer,
-            selectedModerators,
-        });
+        createSession(sessionDetails)
+            .unwrap()
+            .then((data) => console.log(data))
+            .catch((error) => console.log(error));
+        navigate(`/training/${trainingId}`);
     };
 
     return (
         <Layout title="Session Details Form">
             <div className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded">
-                {/* Session Name */}
                 <FormInput
                     name="session-name"
                     label="Session Name"
-                    value={sessionName}
-                    onChange={(e) => setSessionName(e.target.value)}
+                    value={sessionDetails.title}
+                    onChange={(event) =>
+                        setSessionDetails({
+                            ...sessionDetails,
+                            title: event.target.value,
+                        })
+                    }
                 />
 
                 <FormInput
                     name="session-duration"
                     label="Session Duration"
                     type="integer"
-                    value={sessionName}
-                    onChange={() => {}}
+                    // value={String(sessionDetails.duration)}
+                    value={String(duration)}
+                    onChange={(event) =>
+                        setDuration(Number(event.target.value))
+                    }
+                    // onChange={(event) =>
+                    //     setSessionDetails({
+                    //         ...sessionDetails,
+                    //         duration: Number(event.target.value),
+                    //     })
+                    // }
                 />
 
                 <FormInput
                     name="session-description"
                     label="Session Description"
                     type="textarea"
-                    value={sessionDescription}
-                    onChange={(e) => setSessionDescription(e.target.value)}
+                    value={sessionDetails.description}
+                    onChange={(event) =>
+                        setSessionDetails({
+                            ...sessionDetails,
+                            description: event.target.value,
+                        })
+                    }
                 />
 
                 <ActionButton
@@ -154,22 +185,19 @@ const CreateSession = () => {
 
                 {/* Buttons */}
                 <div className="flex justify-end gap-4">
-                    <button
-                        onClick={handleSubmit}
-                        className="bg-itemColor border text-white border-white px-4 py-2 rounded hover:bg-white hover:text-black transition"
-                    >
+                    <Button variant={ButtonType.PRIMARY} onClick={handleSubmit}>
                         Submit
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        variant={ButtonType.SECONDARY}
                         onClick={handleCancel}
-                        className="bg-white text-black px-4 py-2 rounded hover:opacity-90"
                     >
                         Cancel
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Trainer Modal */}
-                {showTrainerModal && (
+                {/* {showTrainerModal && (
                     <SelectModal
                         title="Select Trainer"
                         options={dummyTrainers}
@@ -178,10 +206,10 @@ const CreateSession = () => {
                         onClose={() => setShowTrainerModal(false)}
                         onSelect={setSelectedTrainer}
                     />
-                )}
+                )} */}
 
                 {/* Moderator Modal */}
-                {showModeratorModal && (
+                {/* {showModeratorModal && (
                     <SelectModal
                         title="Select Moderators"
                         options={dummyModerators}
@@ -190,7 +218,7 @@ const CreateSession = () => {
                         onClose={() => setShowModeratorModal(false)}
                         onSelect={setSelectedModerators}
                     />
-                )}
+                )} */}
             </div>
         </Layout>
     );
