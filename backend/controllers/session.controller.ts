@@ -113,7 +113,7 @@ export class SessionController {
   async getRoleInSession(req: Request, res: Response, next: NextFunction) {
     try {
       const sessionId = parseInt(req.params.id, 10);
-      const userId=parseInt(req.body.userId);
+      const userId=parseInt(req.params.userId);
       const session = await this.sessionService.findRoleInSession(sessionId,userId);
 
       res.status(200).json(session);
