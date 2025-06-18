@@ -4,6 +4,9 @@ import { useDrag, useDrop, DndProvider } from "react-dnd";
 import dayjs from "dayjs";
 import { useGetTrainingByIdQuery } from "../../api-service/training/training.api";
 import { useParams } from "react-router-dom";
+import Layout from "../layout/Layout";
+import Button, { ButtonType } from "../button/Button";
+import { useUpdateMultipleSessionsMutation } from "../../api-service/session/session.api";
 
 // 🎨 Color classes for random session colors
 const colorClasses = [
@@ -49,15 +52,11 @@ const DraggableSession = ({
       className={`${session.color} text-white px-2 py-1 rounded mb-2 cursor-move shadow overflow-hidden flex justify-between items-center ${className}`}
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
-      <div>
-        {session.title}
-        <br />
-        <span className="text-sm">{session.duration}</span>
-      </div>
+      <div>{session.title}</div>
       {fromCalendar && (
         <button
           onClick={onRemove}
-          className="ml-2 bg-white text-black rounded-full w-6 h-6 text-xs flex items-center justify-center"
+          className="ml-2 bg-white text-black rounded-full w-5 h-5 text-sm flex items-center justify-center"
         >
           ×
         </button>
@@ -110,33 +109,32 @@ const DroppableDate = ({ date, onDrop, items, onItemRemove }: any) => {
     },
   }));
 
-  const isToday = date.isSame(dayjs(), "day");
   const isCurrentMonth = date.month() === date.startOf("month").month();
 
   return (
     <div
       ref={drop}
-      className={`border border-borderColor ${
-        isToday ? "bg-itemColor" : "bg-cardColor"
-      } h-40 p-2 rounded overflow-auto`}
+      className={`border border-borderColor bg-cardColor hover:bg-itemColor h-32 p-2 rounded overflow-hidden flex flex-col`}
     >
       <div
-        className={`text-md mb-1 ${
+        className={`text-md mb-1 h-fit ${
           isCurrentMonth ? "text-white" : "text-green-500"
         }`}
       >
         {date.date()}
       </div>
-      {items.map((item: any, idx: number) => (
-        <DroppableSessionWrapper
-          key={idx}
-          session={item}
-          index={idx}
-          date={date}
-          onDrop={onDrop}
-          onItemRemove={onItemRemove}
-        />
-      ))}
+      <div className="overflow-y-auto">
+        {items.map((item: any, idx: number) => (
+          <DroppableSessionWrapper
+            key={idx}
+            session={item}
+            index={idx}
+            date={date}
+            onDrop={onDrop}
+            onItemRemove={onItemRemove}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -157,10 +155,7 @@ const DroppablePool = ({
   }));
 
   return (
-    <div
-      ref={drop}
-      className="p-2 bg-cardColor rounded h-full overflow-auto border border-borderColor"
-    >
+    <div ref={drop} className="p-2 h-full">
       {children}
     </div>
   );
@@ -180,25 +175,39 @@ const Calendar = () => {
     id: parseInt(trainingId || "0", 10),
   });
 
+  const [updateMultipleSessions] = useUpdateMultipleSessionsMutation();
+
   useEffect(() => {
     localStorage.setItem("calendarItems", JSON.stringify(calendarItems));
+    console.log("Updated calendar items:", calendarItems);
   }, [calendarItems]);
 
-  // 🎨 Assign random color to each session once
-  const coloredSessions = useMemo(() => {
-    return (trainingDetails?.sessions || []).map((session: any) => ({
+  const coloredSessions = (trainingDetails?.sessions || []).map(
+    (session: any, idx: number) => ({
       ...session,
-      color:
-        session.color ||
-        colorClasses[Math.floor(Math.random() * colorClasses.length)],
-    }));
-  }, [trainingDetails]);
+      color: session.color || colorClasses[session.id % colorClasses.length],
+    })
+  );
+
+  const sessionsRemaining = useMemo(() => {
+    const scheduledIds = new Set<number>();
+
+    Object.values(calendarItems).forEach((sessions: any[]) => {
+      sessions.forEach((session) => {
+        scheduledIds.add(session.id);
+      });
+    });
+    console.log("Scheduled IDs:", scheduledIds);
+
+    return coloredSessions.filter(
+      (session: any) => !scheduledIds.has(session.id)
+    );
+  }, [calendarItems, coloredSessions]);
 
   // 🧩 Handle drop on calendar date
   const handleDropToCalendar = (date: any, session: any) => {
     const key = date.format("YYYY-MM-DD");
     setCalendarItems((prev) => {
-      console.log("prev", prev);
       const existing = prev[key] ? [...prev[key]] : [];
 
       // Reordering within same cell
@@ -207,7 +216,6 @@ const Calendar = () => {
         session.dateKey === key &&
         session.reorderToIndex !== undefined
       ) {
-        console.log("Reordering session in calendar");
         const reordered = [...existing];
         const [moved] = reordered.splice(session.calendarIndex, 1);
         reordered.splice(session.reorderToIndex, 0, moved);
@@ -284,53 +292,88 @@ const Calendar = () => {
     );
   }
 
+  const handleConfirmSchedule = () => {
+    const payload = [
+      ...Object.entries(calendarItems)
+        .filter(([, sessions]) => sessions.length !== 0)
+        .map(([dateKey, sessions]) =>
+          sessions.map((session: any, idx) => ({
+            id: session.id,
+            programId: parseInt(trainingId!, 10),
+            date: dateKey,
+            slot: idx + 1,
+          }))
+        )
+        .flat(),
+    ];
+    updateMultipleSessions({ sessions: payload })
+      .unwrap()
+      .then((x) => {
+        console.log("Schedule updated successfully", x);
+      })
+      .catch((error) => {
+        console.error("Error updating schedule:", error);
+      });
+  };
+
   if (isLoading) return <></>;
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="flex h-screen p-4 bg-bgColor font-sans">
-        {/* 📅 Calendar Section */}
-        <div className="w-3/4">
-          <div className="flex items-center justify-between mb-6">
-            <button
-              className="bg-itemColor text-white px-3 py-1 rounded"
-              onClick={() =>
-                setCurrentMonth((prev) => prev.subtract(1, "month"))
-              }
-            >
-              ◀
-            </button>
-            <div className="text-3xl text-white font-semibold">
-              {currentMonth.format("MMMM YYYY")}
+    <Layout title={`${trainingDetails?.title} - Calendar`}>
+      <DndProvider backend={HTML5Backend}>
+        <div className="flex p-4 bg-bgColor font-sans">
+          {/* 📅 Calendar Section */}
+          <div className="w-3/4">
+            <div className="flex items-center justify-between mb-6">
+              <button
+                className="bg-itemColor text-white px-3 py-1 rounded"
+                onClick={() =>
+                  setCurrentMonth((prev) => prev.subtract(1, "month"))
+                }
+              >
+                ◀
+              </button>
+              <div className="text-3xl text-white font-semibold">
+                {currentMonth.format("MMMM YYYY")}
+              </div>
+              <button
+                className="bg-itemColor text-white px-3 py-1 rounded"
+                onClick={() => setCurrentMonth((prev) => prev.add(1, "month"))}
+              >
+                ▶
+              </button>
             </div>
-            <button
-              className="bg-itemColor text-white px-3 py-1 rounded"
-              onClick={() => setCurrentMonth((prev) => prev.add(1, "month"))}
-            >
-              ▶
-            </button>
+            <div className="grid grid-cols-7 gap-1 text-center font-semibold mb-2 text-white">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <div key={d}>{d}</div>
+              ))}
+            </div>
+            <div className="space-y-1">{calendar}</div>
           </div>
-          <div className="grid grid-cols-7 gap-1 text-center font-semibold mb-2 text-white">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-              <div key={d}>{d}</div>
-            ))}
+          {/* 📦 Session Pool */}
+          <div className="w-1/4 pl-4">
+            <div className="text-xl text-white font-semibold mb-4">
+              Available Sessions
+            </div>
+            <div className="flex flex-col bg-cardColor rounded h-full border border-borderColor">
+              <div className="grow overflow-y-auto">
+                <DroppablePool onDrop={handleDropToPool}>
+                  {sessionsRemaining.map((session: any) => (
+                    <DraggableSession key={session.id} session={session} />
+                  ))}
+                </DroppablePool>
+              </div>
+              <Button
+                variant={ButtonType.PRIMARY}
+                onClick={handleConfirmSchedule}
+              >
+                Confirm Schedule
+              </Button>
+            </div>
           </div>
-          <div className="space-y-1">{calendar}</div>
         </div>
-
-        {/* 📦 Session Pool */}
-        <div className="w-1/4 pl-4">
-          <div className="text-xl text-white font-semibold mb-4">
-            Available Sessions
-          </div>
-          <DroppablePool onDrop={handleDropToPool}>
-            {coloredSessions.map((session: any) => (
-              <DraggableSession key={session.id} session={session} />
-            ))}
-          </DroppablePool>
-        </div>
-      </div>
-    </DndProvider>
+      </DndProvider>
+    </Layout>
   );
 };
 

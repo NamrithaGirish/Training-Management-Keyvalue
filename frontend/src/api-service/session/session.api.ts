@@ -23,15 +23,14 @@ export const sessionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [ApiTagType.TRAINING, ApiTagType.SESSION],
     }),
-    // createMultipleSessions: builder.mutation({
-    //   query: (payload) => ({
-    //     url: "/session/",
-    //     method: "POST",
-    //     body: payload,
-    //   }),
-    //   invalidatesTags: [ApiTagType.TRAINING, ApiTagType.SESSION],
-    // }),
-
+    updateMultipleSessions: builder.mutation({
+      query: (payload) => ({
+        url: "/session",
+        method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: [ApiTagType.TRAINING, ApiTagType.SESSION],
+    }),
     updateSession: builder.mutation({
       query: (payload) => ({
         url: `/session/${payload.id}`,
@@ -57,4 +56,5 @@ export const {
   useCreateSessionMutation,
   useUpdateSessionMutation,
   useDeleteSessionMutation,
+  useUpdateMultipleSessionsMutation,
 } = sessionApi;
