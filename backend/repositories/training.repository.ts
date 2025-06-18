@@ -2,7 +2,7 @@ import { Repository } from "typeorm";
 import { Training } from "../entities/training.entity";
 import {
   TrainingUser,
-  TrainingUserRole,
+  Role,
 } from "../entities/training-users.entity";
 
 export default class TrainingRepository {
@@ -56,7 +56,7 @@ export default class TrainingRepository {
     const insertValues = members.map((m) => ({
       training: { id: trainingId },
       user: { id: m.userId },
-      role: m.role as TrainingUserRole,
+      role: m.role as Role,
     }));
 
     return this.trainingRepo.manager
@@ -75,7 +75,7 @@ export default class TrainingRepository {
       await trainingUserRepo.delete({
         training: { id: trainingId },
         user: { id: m.userId },
-        role: m.role as TrainingUserRole,
+        role: m.role as Role,
       });
     }
 

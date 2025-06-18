@@ -6,11 +6,12 @@ import LoggerService from "./logger.service";
 import HTTPException from "../exceptions/http.exception";
 import { UserSessionRepository } from "../repositories/user-session.repository";
 import { CreateUserSessionDto, DeleteUserSessionDto } from "../dto/user-session.dto";
-import { Role, UserSession } from "../entities/user-session.entity";
+import {  UserSession } from "../entities/user-session.entity";
 import UserRepository from "../repositories/user.repository";
 import UserService from "./user.service";
 import TrainingService from "./training.service";
 import { error } from "console";
+import { Role } from "../entities/training-users.entity";
 
 export class SessionService {
   private logger = LoggerService.getInstance("UserService()");

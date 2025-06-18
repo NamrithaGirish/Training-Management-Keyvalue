@@ -7,7 +7,8 @@ import {
   IsNumber,
 } from "class-validator";
 import { Status } from "../entities/session.entity";
-import { Role } from "../entities/user-session.entity";
+import { Role } from "../entities/training-users.entity";
+
 
 export class CreateUserSessionDto {
   @IsNotEmpty()
