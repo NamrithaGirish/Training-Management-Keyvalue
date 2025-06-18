@@ -15,7 +15,7 @@ export class CreateSessionDto {
 
 	@IsNotEmpty()
 	@IsNumber()
-	program_id: number;
+	programId: number;
 
 	@IsOptional()
 	@IsString()
@@ -25,16 +25,9 @@ export class CreateSessionDto {
 	@IsString()
 	preReq?: string;
 
+	@IsOptional()
 	@IsEnum(Status)
 	status: Status;
-
-	@IsNotEmpty()
-	@IsDateString()
-	date: Date;
-
-	@IsNotEmpty()
-	@IsNumber()
-	slot: number;
 
 	@IsNotEmpty()
 	@IsNumber()
