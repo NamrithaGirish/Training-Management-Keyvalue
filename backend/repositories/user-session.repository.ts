@@ -1,26 +1,68 @@
 import { Repository } from "typeorm";
-import { Role, UserSession } from "../entities/user-session.entity";
-import { Session } from "../entities/session.entity";
-import { User } from "../entities/user.entity";
+import {  UserSession } from "../entities/user-session.entity";
 import SessionRepository from "./session.repository";
-import { CreateUserSessionDto } from "../dto/user-session.dto";
+import TrainingRepository from "./training.repository";
+import { Role } from "../entities/training-users.entity";
 
 export class UserSessionRepository {
-  constructor(private repository: Repository<UserSession>) {}
+  constructor(private repository: Repository<UserSession>,private sessionRepository:SessionRepository,private trainingRepository:TrainingRepository) {}
 
   async addUsersToSession(
-    sessionId: number,
-    users: { id: number; role: Role }[]
-  ): Promise<UserSession[]> {
-    const insertValues = users.map(({ id, role }) =>
+  sessionId: number,
+  users: { id: number; role: Role }[]
+): Promise<UserSession[]> {
+  // Load the session with its training
+  const session = await this.sessionRepository.findOneById(sessionId)
+
+  if (!session || !session.training) {
+    throw new Error('Session or its training not found.');
+  }
+
+  const trainingId = session.training.id;
+
+  // Load training users with the given IDs
+  const userIds = users.map((u) => u.id);
+  
+  const training= await this.trainingRepository.findOneById(trainingId);
+  const trainingUsers=training.members;
+
+  // Prepare insert values after role validation
+  const insertValues: UserSession[] = [];
+
+  for (const { id: userId, role } of users) {
+    // Find all training user roles for this user
+    const userTrainingRoles = trainingUsers
+      .filter((tu) => tu.user.id === userId)
+      .map((tu) => tu.role);
+
+    let isValid = false;
+
+    if (role === Role.TRAINER) {
+      isValid = userTrainingRoles.includes(Role.TRAINER) || userTrainingRoles.includes(Role.ADMIN);
+    } else if (role === Role.MODERATOR) {
+      isValid = userTrainingRoles.includes(Role.MODERATOR) || userTrainingRoles.includes(Role.ADMIN);
+    } else if (role === Role.CANDIDATE) {
+      isValid = userTrainingRoles.includes(Role.CANDIDATE);
+    }
+
+    if (!isValid) {
+      throw new Error(
+        `User ${userId} cannot be assigned role '${role}' in this session (training roles: [${userTrainingRoles.join(', ')}]).`
+      );
+    }
+
+    insertValues.push(
       this.repository.create({
         session: { id: sessionId },
-        user: { id: id },
-        role: role as Role,
+        user: { id: userId },
+        role,
       })
     );
-    return this.repository.save(insertValues);
   }
+
+  return this.repository.save(insertValues);
+}
+
 
   async getAll(): Promise<UserSession[]> {
     return this.repository.find({
@@ -52,6 +94,26 @@ export class UserSessionRepository {
     .andWhere("user_id IN (:...userIds)", { userIds })
     .execute();
 }
+async UpdateUserRole(
+    sessionId: number,
+    users: { id: number; role: Role }[]
+  ): Promise<UserSession[]> {
+    const insertValues = users.map(({ id, role }) =>
+      this.repository.create({
+        session: { id: sessionId },
+        user: { id: id },
+        role: role as Role,
+      })
+    );
+    return this.repository.save(insertValues);
+  }
+  // Update a user's role in a session
+  // async updateRole(userId: number, sessionId: number, newRole: Role): Promise<void> {
+  //   await this.repository.update(
+  //     { user: { id: userId }, session: { id: sessionId } },
+  //     { role: newRole }
+  //   );
+  // }
 
 
   
