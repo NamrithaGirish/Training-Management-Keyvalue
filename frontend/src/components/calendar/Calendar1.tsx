@@ -5,10 +5,30 @@ import dayjs from "dayjs";
 
 // Sample session pool
 const sessionData = [
-  { id: 1, title: "Product team meeting", duration: "1.5 hours", color: "bg-red-500" },
-  { id: 2, title: "General orientation", duration: "2 hours", color: "bg-orange-400" },
-  { id: 3, title: "Client Training", duration: "4 hours", color: "bg-purple-600" },
-  { id: 4, title: "CEO Conference", duration: "6 hours", color: "bg-green-600" },
+  {
+    id: 1,
+    title: "Product team meeting",
+    duration: "1.5 hours",
+    color: "bg-red-500",
+  },
+  {
+    id: 2,
+    title: "General orientation",
+    duration: "2 hours",
+    color: "bg-orange-400",
+  },
+  {
+    id: 3,
+    title: "Client Training",
+    duration: "4 hours",
+    color: "bg-purple-600",
+  },
+  {
+    id: 4,
+    title: "CEO Conference",
+    duration: "6 hours",
+    color: "bg-green-600",
+  },
 ];
 
 // Draggable session
@@ -108,9 +128,15 @@ const DroppableDate = ({ date, onDrop, items, onItemRemove }: any) => {
   return (
     <div
       ref={drop}
-      className={`border border-borderColor ${isToday ? "bg-itemColor" : "bg-cardColor"} h-40 p-2 rounded overflow-auto`}
+      className={`border border-borderColor ${
+        isToday ? "bg-itemColor" : "bg-cardColor"
+      } h-40 p-2 rounded overflow-auto`}
     >
-      <div className={`text-md mb-1 ${isCurrentMonth ? "text-white" : "text-green-500"}`}>
+      <div
+        className={`text-md mb-1 ${
+          isCurrentMonth ? "text-white" : "text-green-500"
+        }`}
+      >
         {date.date()}
       </div>
       {items.map((item: any, idx: number) => (
@@ -154,20 +180,23 @@ const DroppablePool = ({
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(dayjs("2025-06-01"));
-  const [calendarItems, setCalendarItems] = useState<{ [key: string]: any[] }>(() => {
-    const saved = localStorage.getItem("calendarItems");
-    return saved ? JSON.parse(saved) : {};
-  });
+  const [calendarItems, setCalendarItems] = useState<{ [key: string]: any[] }>(
+    () => {
+      const saved = localStorage.getItem("calendarItems");
+      return saved ? JSON.parse(saved) : {};
+    }
+  );
 
   useEffect(() => {
     localStorage.setItem("calendarItems", JSON.stringify(calendarItems));
+    console.log("Calendar items updated:", calendarItems);
   }, [calendarItems]);
 
   const handleDropToCalendar = (date: any, session: any) => {
     const key = date.format("YYYY-MM-DD");
-
     setCalendarItems((prev) => {
-      const existing = prev[key] || [];
+      console.log("prev", prev);
+      const existing = prev[key] ? [...prev[key]] : [];
 
       // Reordering within same cell
       if (
@@ -175,6 +204,7 @@ const Calendar = () => {
         session.dateKey === key &&
         session.reorderToIndex !== undefined
       ) {
+        console.log("Reordering session in calendar");
         const reordered = [...existing];
         const [moved] = reordered.splice(session.calendarIndex, 1);
         reordered.splice(session.reorderToIndex, 0, moved);
@@ -184,10 +214,12 @@ const Calendar = () => {
       // Rescheduling to different date
       if (session.fromCalendar && session.dateKey !== key) {
         const updated = { ...prev };
-        const fromList = updated[session.dateKey] || [];
-        fromList.splice(session.calendarIndex, 1); // remove from old date
+        const fromList = updated[session.dateKey]
+          ? [...updated[session.dateKey]]
+          : [];
+        const removed = fromList.splice(session.calendarIndex, 1); // remove from old date
         updated[session.dateKey] = fromList;
-        updated[key] = [...(updated[key] || []), { ...session }];
+        updated[key] = [...existing, removed[0]];
         return updated;
       }
 
@@ -255,7 +287,9 @@ const Calendar = () => {
           <div className="flex items-center justify-between mb-6">
             <button
               className="bg-itemColor text-white px-3 py-1 rounded"
-              onClick={() => setCurrentMonth((prev) => prev.subtract(1, "month"))}
+              onClick={() =>
+                setCurrentMonth((prev) => prev.subtract(1, "month"))
+              }
             >
               ◀
             </button>
@@ -279,7 +313,9 @@ const Calendar = () => {
 
         {/* Session Pool */}
         <div className="w-1/4 pl-4">
-          <div className="text-xl text-white font-semibold mb-4">Available Sessions</div>
+          <div className="text-xl text-white font-semibold mb-4">
+            Available Sessions
+          </div>
           <DroppablePool onDrop={handleDropToPool}>
             {sessionData.map((session) => (
               <DraggableSession key={session.id} session={session} />
