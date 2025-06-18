@@ -4,7 +4,6 @@ import DashboardCardList from "../../components/dashboardCardList/DashboardCardL
 import EventList, { formatTrainingList } from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
 
-
 const AdminDashboard = () => {
     const navigate = useNavigate();
     const { data: trainingDetailsList } = useGetTrainingListQuery({});

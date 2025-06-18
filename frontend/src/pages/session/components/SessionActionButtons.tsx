@@ -1,68 +1,92 @@
-import type { UserRole } from "./sessionTypes";
+import { useState } from "react";
+import Button, { ButtonType } from "../../../components/button/Button";
+import { UserRoleType, type UserRole } from "./sessionTypes";
+import { UploadMaterialsModal } from "./modals/UploadMaterialsModal";
+import { FeedbackModal } from "./modals/FeedbackModal";
+import { CandidateListModal } from "./modals/CandidateListModal";
+import { UploadAssignmentsModal } from "./modals/UploadAssignmentsModal";
 
 interface SessionActionButtonsProps {
-  userRole: UserRole;
-  onUploadAssignment: () => void;
-  onGiveFeedback: () => void;
-  onUploadMaterials: () => void;
+    userRole: UserRole;
+    uploadAssignment?: boolean;
+    giveFeedback?: boolean;
+    uploadMaterials?: boolean;
 }
 
 export const SessionActionButtons: React.FC<SessionActionButtonsProps> = ({
-  userRole,
-  onUploadAssignment,
-  onGiveFeedback,
-  onUploadMaterials
+    userRole,
+    uploadAssignment = false,
+    giveFeedback = false,
+    uploadMaterials = false,
 }) => {
-  switch (userRole) {
-    case "candidate":
-      return (
+    const [uploadModalOpen, setUploadModalOpen] = useState(false);
+    const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+    const [candidateListModalOpen, setCandidateListModalOpen] = useState(false);
+
+    const handleUploadAssignment = () => {
+        setUploadModalOpen(true);
+    };
+
+    const handleGiveFeedback = () => {
+        if (userRole === UserRoleType.CANDIDATE) {
+            setFeedbackModalOpen(true);
+        } else {
+            setCandidateListModalOpen(true);
+        }
+    };
+
+    const handleUploadMaterials = () => {
+        setUploadModalOpen(true);
+    };
+
+    return (
         <div className="flex gap-4">
-          <button
-            onClick={onGiveFeedback}
-            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
-          >
-            Give Feedback
-          </button>
-          <button
-            onClick={onUploadAssignment}
-            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
-          >
-            Upload Assignment
-          </button>
+            {giveFeedback && (
+                <>
+                    <Button
+                        onClick={handleGiveFeedback}
+                        variant={ButtonType.SECONDARY}
+                    >
+                        Give Feedback
+                    </Button>
+                    <CandidateListModal
+                        isOpen={candidateListModalOpen}
+                        onClose={() => setCandidateListModalOpen(false)}
+                    />
+                    <FeedbackModal
+                        isOpen={feedbackModalOpen}
+                        onClose={() => setFeedbackModalOpen(false)}
+                    />
+                </>
+            )}
+            {uploadAssignment && (
+                <>
+                    <Button
+                        onClick={handleUploadAssignment}
+                        variant={ButtonType.SECONDARY}
+                    >
+                        Upload Assignment
+                    </Button>
+                    <UploadAssignmentsModal
+                        isOpen={uploadModalOpen}
+                        onClose={() => setUploadModalOpen(false)}
+                    />
+                </>
+            )}
+            {uploadMaterials && (
+                <>
+                    <Button
+                        onClick={handleUploadMaterials}
+                        variant={ButtonType.SECONDARY}
+                    >
+                        Upload Materials
+                    </Button>
+                    <UploadMaterialsModal
+                        isOpen={uploadModalOpen}
+                        onClose={() => setUploadModalOpen(false)}
+                    />
+                </>
+            )}
         </div>
-      );
-    
-    case "trainer":
-      return (
-        <div className="flex gap-4">
-          <button
-            onClick={onUploadMaterials}
-            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
-          >
-            Upload Materials ↑
-          </button>
-          <button
-            onClick={onGiveFeedback}
-            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
-          >
-            Give Feedback
-          </button>
-        </div>
-      );
-    
-    case "moderator":
-      return (
-        <div className="flex gap-4">
-          <button
-            onClick={onGiveFeedback}
-            className="px-4 py-2 border border-white rounded-md hover:bg-white hover:text-black transition"
-          >
-            Give Feedback
-          </button>
-        </div>
-      );
-    
-    default:
-      return null;
-  }
+    );
 };

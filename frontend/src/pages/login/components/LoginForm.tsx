@@ -3,6 +3,7 @@ import LoginInput from "./LoginInput";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../../api-service/auth/login.api";
 import Button, { ButtonType } from "../../../components/button/Button";
+import { toast } from "react-toastify";
 
 type SliderPosition = "left" | "right";
 
@@ -106,9 +107,8 @@ const LoginForm = () => {
                 navigate("/dashboard");
             })
             .catch((error) => {
-                console.log(error);
                 setSigninData({ username: "", password: "" });
-                navigate("/");
+                toast(`Error: ${error.data.error || "Something went wrong"}`);
             });
     };
 

@@ -1,81 +1,60 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SessionContent } from "./components/SessionContent";
 import { SessionActionButtons } from "./components/SessionActionButtons";
 
 import { UploadAssignmentsModal } from "./components/modals/UploadAssignmentsModal";
 import { FeedbackModal } from "./components/modals/FeedbackModal";
 import { CandidateListModal } from "./components/modals/CandidateListModal";
-import type { UserRole, SessionData } from "./components/sessionTypes";
+import { type UserRole, type SessionData, UserRoleType } from "./components/sessionTypes";
 import Layout from "../../components/layout/Layout";
 import { useParams } from "react-router-dom";
-
-interface SessionDetailsProps {
-    userRole: UserRole;
-    sessionData: SessionData;
-}
+import { useGetSessionByIdQuery } from "../../api-service/session/session.api";
+import { UploadMaterialsModal } from "./components/modals/UploadMaterialsModal";
 
 const SessionDetails = () => {
-    const [uploadModalOpen, setUploadModalOpen] = useState(false);
-    const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-    const [candidateListModalOpen, setCandidateListModalOpen] = useState(false);
+     const [sessionDetails, setSessionDetails] = useState<SessionData>({
+        description: "",
+        userRoles: []
+    });
 
-    const { sessionId } = useParams();
-    // const sessionData={
-    //     trainerName: "",
-    //     moderators: [""],
-    //     sessionDescription: ""
-    // }
+    
 
+    const { trainingId, sessionId } = useParams();
+    const { data: sessionDetailsData } = useGetSessionByIdQuery({ id: sessionId });
+    
+    useEffect(() => {
+        if(!sessionDetailsData)
+            return;
+        setSessionDetails({
+            description: sessionDetailsData.description,
+            userRoles: []
+        })
+    }, [sessionDetailsData])
 
-    const handleUploadAssignment = () => {
-        setUploadModalOpen(true);
-    };
+    const userRole: UserRole = UserRoleType.MODERATOR;   
 
-    const handleGiveFeedback = () => {
-        if (userRole === "candidate") {
-            setFeedbackModalOpen(true);
-        } else {
-            setCandidateListModalOpen(true);
-        }
-    };
+    if(!sessionDetailsData)
+        return (<></>);
 
-    const handleUploadMaterials = () => {
-        setUploadModalOpen(true);
-    };
 
     return (
-        <Layout>
+        <Layout title={sessionDetailsData.title}>
             <div className="min-h-screen w-full relative text-white">
                 <div>
                     <div className="border border-borderColor bg-cardColor w-full rounded-lg p-6 space-y-6">
-                        <SessionContent sessionData={sessionData} />
+                        <SessionContent sessionData={sessionDetails} />
 
                         {/* Action Buttons */}
                         <div className="pt-4">
                             <SessionActionButtons
                                 userRole={userRole}
-                                onUploadAssignment={handleUploadAssignment}
-                                onGiveFeedback={handleGiveFeedback}
-                                onUploadMaterials={handleUploadMaterials}
+                                uploadMaterials={userRole === UserRoleType.TRAINER}
+                                giveFeedback={true}
+                                uploadAssignment={userRole === UserRoleType.CANDIDATE}
                             />
                         </div>
                     </div>
                 </div>
-
-                <UploadAssignmentsModal
-                    isOpen={uploadModalOpen}
-                    onClose={() => setUploadModalOpen(false)}
-                />
-
-                <FeedbackModal
-                    isOpen={feedbackModalOpen}
-                    onClose={() => setFeedbackModalOpen(false)}
-                />
-
-                <CandidateListModal
-                    isOpen={candidateListModalOpen}
-                    onClose={() => setCandidateListModalOpen(false)}
-                />
             </div>
         </Layout>
     );

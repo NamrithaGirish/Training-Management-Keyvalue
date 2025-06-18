@@ -5,6 +5,7 @@ import FormInput from "../../components/formInput/FormInput";
 import ActionButton from "../../components/actionButton/ActionButton";
 import Button, { ButtonType } from "../../components/button/Button";
 import { useCreateSessionMutation } from "../../api-service/session/session.api";
+import { useNavigate, useParams } from "react-router-dom";
 
 type SelectModalProps = {
     title: string;
@@ -94,7 +95,9 @@ const CreateSession = () => {
         endTime: "2025-07-05",
     });
 
-    const [duration, setDuration] = useState(0)
+    const { trainingId } = useParams();
+    const [duration, setDuration] = useState(0);
+    const navigate = useNavigate();
 
     const [showTrainerModal, setShowTrainerModal] = useState(false);
     const [showModeratorModal, setShowModeratorModal] = useState(false);
@@ -122,6 +125,7 @@ const CreateSession = () => {
             .unwrap()
             .then((data) => console.log(data))
             .catch((error) => console.log(error));
+        navigate(`/training/${trainingId}`);
     };
 
     return (
@@ -145,7 +149,9 @@ const CreateSession = () => {
                     type="integer"
                     // value={String(sessionDetails.duration)}
                     value={String(duration)}
-                    onChange={(event) => setDuration(Number(event.target.value))}
+                    onChange={(event) =>
+                        setDuration(Number(event.target.value))
+                    }
                     // onChange={(event) =>
                     //     setSessionDetails({
                     //         ...sessionDetails,

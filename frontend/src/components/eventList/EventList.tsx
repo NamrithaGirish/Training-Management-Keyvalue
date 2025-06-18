@@ -59,7 +59,11 @@ const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
     return (
         <div
             className="border border-gray-700 p-4 rounded-lg bg-cardColor cursor-pointer"
-            onClick={() => navigate(`/${heading}/${item.id}`)}
+            onClick={() =>
+                heading == "session"
+                    ? navigate(`session/${item.id}`)
+                    : navigate(`/training/${item.id}`)
+            }
         >
             <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold">{item.title}</h3>

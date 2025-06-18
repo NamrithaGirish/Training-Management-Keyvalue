@@ -1,9 +1,14 @@
-export type UserRole = "candidate" | "trainer" | "moderator";
+export const UserRoleType = {
+  TRAINER: "trainer",
+  MODERATOR: "moderator",
+  CANDIDATE: "candidate"
+} as const;
+
+export type UserRole = typeof UserRoleType[keyof typeof UserRoleType];
 
 export interface SessionData {
-  trainerName: string;
-  moderators: string[];
-  sessionDescription: string;
+  userRoles: [];
+  description: string;
   uploadedMaterials?: string[];
 }
 

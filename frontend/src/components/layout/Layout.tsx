@@ -1,5 +1,6 @@
 import Header from "../header/Header";
 import Navbar from "../navbar/Navbar";
+import { ToastContainer } from "react-toastify";
 
 interface LayoutProps {
     title?: string;
@@ -24,7 +25,8 @@ const LightEffect = () => {
 const Layout: React.FC<LayoutProps> = ({ title, children, endAdornments }) => {
     return (
         <div className="flex flex-col min-h-screen bg-bgColor">
-            <Header title={title} endAdornments={endAdornments}/>
+            <ToastContainer/>
+            <Header title={title} endAdornments={endAdornments} />
             <Navbar />
             <div className="flex mt-headerHeight">
                 <div className="w-full h-bodyHeight relative ml-navbarWidth">
@@ -34,6 +36,7 @@ const Layout: React.FC<LayoutProps> = ({ title, children, endAdornments }) => {
                     </main>
                 </div>
             </div>
+            {/* <Popup isOpen={true} popup={popup} /> */}
         </div>
     );
 };

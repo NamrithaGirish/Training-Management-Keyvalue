@@ -21,7 +21,7 @@ export const sessionApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: payload,
             }),
-            invalidatesTags: [ApiTagType.SESSION],
+            invalidatesTags: [ApiTagType.TRAINING, ApiTagType.SESSION],
         }),
 
         updateSession: builder.mutation({
@@ -30,7 +30,7 @@ export const sessionApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: payload.data,
             }),
-            invalidatesTags: [ApiTagType.SESSION],
+            invalidatesTags: [ApiTagType.TRAINING, ApiTagType.SESSION],
         }),
 
         deleteSession: builder.mutation({
@@ -38,7 +38,7 @@ export const sessionApi = baseApi.injectEndpoints({
                 url: `/session/${payload.id}`,
                 method: "DELETE",
             }),
-            invalidatesTags: [ApiTagType.SESSION],
+            invalidatesTags: [ApiTagType.TRAINING, ApiTagType.SESSION],
         }),
     }),
 });
