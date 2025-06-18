@@ -11,6 +11,7 @@ import {
     useGetTrainingByIdQuery,
 } from "../../api-service/training/training.api";
 import Button, { ButtonType } from "../../components/button/Button";
+import { useEffect } from "react";
 
 const TrainingDetails = () => {
     const { trainingId } = useParams();
@@ -20,8 +21,10 @@ const TrainingDetails = () => {
         id: trainingId,
     });
     const [deleteTraining] = useDeleteTrainingMutation();
+    useEffect(()=>{console.log(trainingDetails)}, [trainingDetails])
 
     if (!trainingDetails) return <></>;
+
 
     return (
         <Layout

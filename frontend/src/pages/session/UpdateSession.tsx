@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import Layout from "../../components/layout/Layout";
 import FormInput from "../../components/formInput/FormInput";
 import ActionButton from "../../components/actionButton/ActionButton";
 import Button, { ButtonType } from "../../components/button/Button";
+import {
+    useGetSessionByIdQuery,
+    useUpdateSessionMutation,
+} from "../../api-service/session/session.api";
+import { useNavigate, useParams } from "react-router-dom";
 
 type SelectModalProps = {
     title: string;
@@ -83,62 +88,90 @@ const SelectModal: React.FC<SelectModalProps> = ({
     );
 };
 
-const CreateSession = () => {
-    const [sessionName, setSessionName] = useState("");
-    const [sessionDescription, setSessionDescription] = useState("");
+const UpdateSession = () => {
+    const [sessionDetails, setSessionDetails] = useState({
+        programId: 0,
+        title: "s1",
+        description: "desc",
+        date: "2020-07-10",
+        duration: 3,
+    });
+
+    const navigate = useNavigate();
+    const { trainingId, sessionId } = useParams();
+    const { data: sessionDetailsData } = useGetSessionByIdQuery({
+        id: sessionId,
+    });
+    useEffect(() => {
+        if (!sessionDetailsData) return;
+        setSessionDetails({
+            programId: sessionDetailsData.training.id,
+            title: sessionDetailsData.title,
+            description: sessionDetailsData.description,
+            date: sessionDetailsData.date,
+            duration: sessionDetailsData.duration,
+        });
+    }, [sessionDetailsData]);
+
     const [showTrainerModal, setShowTrainerModal] = useState(false);
     const [showModeratorModal, setShowModeratorModal] = useState(false);
     const [selectedTrainer, setSelectedTrainer] = useState<string[]>([]);
     const [selectedModerators, setSelectedModerators] = useState<string[]>([]);
-    const dummyTrainers = Array.from(
-        { length: 50 },
-        (_, i) => `Trainer ${i + 1}`
-    );
-    const dummyModerators = Array.from(
-        { length: 100 },
-        (_, i) => `Moderator ${i + 1}`
-    );
+
+    const [updateSession] = useUpdateSessionMutation();
+
     const handleCancel = () => {
-        setSessionName("");
-        setSessionDescription("");
         setSelectedTrainer([]);
         setSelectedModerators([]);
     };
 
     const handleSubmit = () => {
-        console.log({
-            sessionName,
-            sessionDescription,
-            selectedTrainer,
-            selectedModerators,
-        });
+        updateSession({ id: sessionId, data: sessionDetails })
+            .unwrap()
+            .then((data) => console.log(data))
+            .catch((error) => console.log(error));
+        navigate(`/training/${trainingId}`);
     };
 
     return (
         <Layout title="Session Details Form">
             <div className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded">
-                {/* Session Name */}
                 <FormInput
                     name="session-name"
                     label="Session Name"
-                    value={sessionName}
-                    onChange={(e) => setSessionName(e.target.value)}
+                    value={sessionDetails.title}
+                    onChange={(event) =>
+                        setSessionDetails({
+                            ...sessionDetails,
+                            title: event.target.value,
+                        })
+                    }
                 />
 
                 <FormInput
                     name="session-duration"
                     label="Session Duration"
                     type="integer"
-                    value={sessionName}
-                    onChange={() => {}}
+                    value={String(sessionDetails.duration)}
+                    onChange={(event) =>
+                        setSessionDetails({
+                            ...sessionDetails,
+                            duration: Number(event.target.value),
+                        })
+                    }
                 />
 
                 <FormInput
                     name="session-description"
                     label="Session Description"
                     type="textarea"
-                    value={sessionDescription}
-                    onChange={(e) => setSessionDescription(e.target.value)}
+                    value={sessionDetails.description}
+                    onChange={(event) =>
+                        setSessionDetails({
+                            ...sessionDetails,
+                            description: event.target.value,
+                        })
+                    }
                 />
 
                 <ActionButton
@@ -168,7 +201,7 @@ const CreateSession = () => {
                 {showTrainerModal && (
                     <SelectModal
                         title="Select Trainer"
-                        options={dummyTrainers}
+                        options={[]}
                         selected={selectedTrainer}
                         multiSelect={false}
                         onClose={() => setShowTrainerModal(false)}
@@ -180,7 +213,7 @@ const CreateSession = () => {
                 {showModeratorModal && (
                     <SelectModal
                         title="Select Moderators"
-                        options={dummyModerators}
+                        options={[]}
                         selected={selectedModerators}
                         multiSelect={true}
                         onClose={() => setShowModeratorModal(false)}
@@ -191,4 +224,4 @@ const CreateSession = () => {
         </Layout>
     );
 };
-export default CreateSession;
+export default UpdateSession;
