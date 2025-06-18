@@ -38,13 +38,13 @@ export class Session extends AbstractBaseEntity {
 	@Column({ nullable: true })
 	preReq: string;
 
-	@Column({ type: "timestamp" })
+	@Column({ type: "timestamp", nullable: true })
 	date?: Date;
 
-	@Column()
+	@Column({ nullable: true })
 	slot?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	duration?: number;
 
 	@Column({ type: "text", nullable: true })
