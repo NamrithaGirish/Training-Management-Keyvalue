@@ -11,6 +11,7 @@ import sessionRouter from "./routes/session.routes";
 import materialRouter from "./routes/material.route";
 import trainingRouter from "./routes/training.route";
 import feedbackRouter from "./routes/feedback.routes";
+import analyticsRouter from "./routes/analytics.routes";
 
 const PORT = 3000;
 
@@ -37,6 +38,7 @@ server.use("/material", materialRouter);
 server.use("/trainings", trainingRouter);
 server.use("/feedback", feedbackRouter);
 
+server.use("/analytics", analyticsRouter);
 server.use(errorMiddleware);
 
 (async () => {
