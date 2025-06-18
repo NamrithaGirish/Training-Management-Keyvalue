@@ -6,6 +6,7 @@ import { JWT_SECRET } from "../utils/constants";
 
 function getToken(req: Request): string {
   const token: string = req.headers.authorization;
+  console.log(token);
   if (!token) throw new HttpException(401, "Not authorized");
   const tokenSplits = token.split(" ");
   if (tokenSplits.length != 2) {

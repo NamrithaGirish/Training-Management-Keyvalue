@@ -7,6 +7,7 @@ export default class TrainingController {
 
   async getTrainings(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("this is id", req?.user?.id);
       const userId = req.params.id ? parseInt(req.params.id) : undefined;
       console.log("userId : ", userId);
       const trainings = await this.trainingService.getAllTrainings(userId);
@@ -29,7 +30,7 @@ export default class TrainingController {
 
   async createTraining(req: Request, res: Response, next: NextFunction) {
     try {
-      const result = await this.trainingService.createTraining(req.body);
+      const result = await this.trainingService.createTraining(req.body,req.user.id);
       res.status(201).json(result);
     } catch (err) {
       next(err);
