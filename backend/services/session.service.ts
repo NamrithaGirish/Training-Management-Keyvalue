@@ -23,7 +23,7 @@ export class SessionService {
   async createSession(sessionDto: CreateSessionDto): Promise<Session> {
     const session = plainToInstance(Session, instanceToPlain(sessionDto));
     const training = await this.trainingService.getTrainingById(
-      sessionDto.program_id
+      sessionDto.programId
     );
     if (training) {
       session.training = training;
