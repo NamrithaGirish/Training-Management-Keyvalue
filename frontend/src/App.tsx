@@ -15,7 +15,11 @@ import CreateSession from "./pages/session/CreateSession";
 import SessionDetails from "./pages/session/SessionDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
+<<<<<<< HEAD
 import UpdateSession from "./pages/session/UpdateSession";
+=======
+import CommonDashboard from "./pages/commonDashboard/CommonDashboard";
+>>>>>>> 4138d4b (common dashboard)
 
 const router = createBrowserRouter([
     {
@@ -27,6 +31,16 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <AdminDashboard />,
         errorElement: <NotFound />,
+    },
+    {
+      path: "/commonDashboard/:id",
+        element: <CommonDashboard />,
+        errorElement: <NotFound />,  
+    },
+    {
+      path: "/commonDashboard/:id/training/:trainingId",
+        element: <TrainingDetails />,
+        errorElement: <NotFound />,  
     },
     {
         path: "/training",

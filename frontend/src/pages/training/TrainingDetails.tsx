@@ -12,6 +12,7 @@ import {
 } from "../../api-service/training/training.api";
 import Button, { ButtonType } from "../../components/button/Button";
 import { useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const TrainingDetails = () => {
     const { trainingId } = useParams();
@@ -20,6 +21,12 @@ const TrainingDetails = () => {
     const { data: trainingDetails } = useGetTrainingByIdQuery({
         id: trainingId,
     });
+
+    const token = localStorage.getItem("token")
+    const decoded = jwtDecode(token);
+    const isAdmin = decoded.isAdmin;
+    console.log("Hellooo",isAdmin);
+
     const [deleteTraining] = useDeleteTrainingMutation();
     useEffect(()=>{console.log(trainingDetails)}, [trainingDetails])
 
@@ -69,6 +76,7 @@ const TrainingDetails = () => {
                     endDate="2023-10-31"
                 />
                 <EventList
+                    isAdmin={isAdmin}
                     heading="Sessions"
                     showCreateButton={true}
                     onCreateClick={() => navigate("session/create")}

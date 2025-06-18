@@ -29,10 +29,12 @@ export type EventProps = {
 type EventItem = {
     item: EventProps;
     heading: string;
+    isAdmin: boolean;
 };
 
 type EventListProps = {
     heading: string;
+    isAdmin: boolean;
     showCreateButton?: boolean;
     onCreateClick?: () => void;
     data?: EventProps[];
@@ -54,7 +56,7 @@ export const formatTrainingList = (trainingDetailsList: Array<EventProps>) => {
     return formattedTrainingList;
 };
 
-const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
+const EventListItem: React.FC<EventItem> = ({ item, heading, isAdmin }) => {
     const navigate = useNavigate();
     return (
         <div
@@ -62,7 +64,8 @@ const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
             onClick={() =>
                 heading == "session"
                     ? navigate(`session/${item.id}`)
-                    : navigate(`/training/${item.id}`)
+                    : isAdmin ? navigate(`/training/${item.id}`)
+                        : navigate(`training/${item.id}`)
             }
         >
             <div className="flex items-center justify-between">
@@ -118,6 +121,7 @@ const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
 
 const EventList: React.FC<EventListProps> = ({
     heading,
+    isAdmin,
     showCreateButton = false,
     onCreateClick,
     data,
@@ -140,7 +144,7 @@ const EventList: React.FC<EventListProps> = ({
                 <div className="flex justify-between items-center mb-4 p-4 rounded-lg bg-cardColor w-full">
                     <h2 className="text-3xl font-bold">{heading}</h2>
                     <div className="flex items-center space-x-3">
-                        {showCreateButton && (
+                        {isAdmin && showCreateButton &&  (
                             <button
                                 className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200"
                                 onClick={onCreateClick}
@@ -211,6 +215,7 @@ const EventList: React.FC<EventListProps> = ({
                     ) : (
                         filteredData.map((item, index) => (
                             <EventListItem
+                                isAdmin={isAdmin}
                                 key={index}
                                 item={item}
                                 heading={heading.slice(0, -1).toLowerCase()}
