@@ -16,7 +16,8 @@ import SessionDetails from "./pages/session/SessionDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import UpdateSession from "./pages/session/UpdateSession";
-import Calendar from "./components/calendar/Calender1";
+import Calendar from "./components/calendar/Calendar";
+// import Calendar from "./components/calendar/Calender1";
 // import Calendar from "./components/calendar/Calendar";
 
 const router = createBrowserRouter([
