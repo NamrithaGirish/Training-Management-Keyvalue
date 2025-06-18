@@ -1,15 +1,30 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetTrainingListQuery } from "../../api-service/training/training.api";
 import DashboardCardList from "../../components/dashboardCardList/DashboardCardList";
 import EventList, { formatTrainingList } from "../../components/eventList/EventList";
 import Layout from "../../components/layout/Layout";
+import { useGetTrainingByUserIdQuery } from "../../api-service/user/user.api";
 
-const AdminDashboard = () => {
+const CommonDashboard = () => {
     const navigate = useNavigate();
-    const { data: trainingDetailsList } = useGetTrainingListQuery({});
+    const { id } = useParams<{ id: string }>();
+
+    const { data: trainingDetailsList, isLoading, error } = useGetTrainingByUserIdQuery(id, {
+        skip: !id,
+    });
+
+    if (isLoading) {
+        return <Layout title="Your Dashboard"><p className="text-white p-5">Loading...</p></Layout>;
+    }
+
+    if (error) {
+        return <Layout title="Your Dashboard"><p className="text-red-500 p-5">Failed to load training data.</p></Layout>;
+    }
+
+    const formattedTrainings = formatTrainingList(trainingDetailsList?.totalPrograms || []);
 
     return (
-        <Layout title="Admin Dashboard">
+        <Layout title="Your Dashboard">
             <div className="flex flex-col items-center justify-center gap-10 p-5">
                 <DashboardCardList
                     data={[
@@ -21,15 +36,14 @@ const AdminDashboard = () => {
                     ]}
                 />
                 <EventList
-                    isAdmin={true}
+                    isAdmin={false}
                     heading="Trainings"
-                    showCreateButton={true}
-                    onCreateClick={() => navigate("/training/create")}
-                    data={formatTrainingList(trainingDetailsList)}
+                    showCreateButton={false}
+                    data={formattedTrainings}
                 />
             </div>
         </Layout>
     );
 };
 
-export default AdminDashboard;
+export default CommonDashboard;

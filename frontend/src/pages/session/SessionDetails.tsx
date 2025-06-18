@@ -14,6 +14,7 @@ const SessionDetails = () => {
         userRoles: []
     });
 
+
     
     const navigate = useNavigate();
     const { trainingId, sessionId } = useParams();
@@ -29,7 +30,7 @@ const SessionDetails = () => {
         })
     }, [sessionDetailsData])
 
-    const userRole: UserRole = UserRoleType.MODERATOR;   
+    const userRole: UserRole = UserRoleType.TRAINER;   
 
     const checkRole = (roleType: UserRole) => {
         return userRole == roleType;
