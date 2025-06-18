@@ -40,7 +40,7 @@ export default class AnalyticsService {
 		});
 		const todaysSessions = totalSessions.filter((session) => {
 			return (
-				new Date(session.startTime) === today &&
+				new Date(session.date) === today &&
 				session.status === (Status.Scheduled || Status.InProgress)
 			);
 		});
@@ -49,7 +49,7 @@ export default class AnalyticsService {
 		});
 		const upcomingSessions = totalSessions.filter((session) => {
 			return (
-				new Date(session.startTime) >= today &&
+				new Date(session.date) >= today &&
 				session.status === (Status.Scheduled || Status.InProgress)
 			);
 		});
@@ -71,7 +71,7 @@ export default class AnalyticsService {
 		const today = new Date();
 		const upcomingSessions = totalSessions.filter((session) => {
 			return (
-				new Date(session.startTime) >= today &&
+				new Date(session.date) >= today &&
 				session.status === (Status.Scheduled || Status.InProgress)
 			);
 		});
