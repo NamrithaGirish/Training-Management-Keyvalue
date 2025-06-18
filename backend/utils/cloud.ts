@@ -9,8 +9,10 @@ cloudinary.config({
 
 export async function uploadFile(file: multer.File, folder: string) {
 	console.log("File received:", file);
+	const fileName = file.originalname;
 	const result = await cloudinary.uploader.upload(file.path, {
 		folder: folder,
+		public_id: fileName, // Use the original file name
 		resource_type: "auto",
 	});
 	console.log("Cloudinary upload result:", result);

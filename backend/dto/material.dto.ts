@@ -9,9 +9,9 @@ import {
 
 export class CreateMaterialDto {
 	@IsNotEmpty()
-	@IsNumber()
+	// @IsNumber()
 	sessionId: number;
-    
+
 	@IsString()
 	@IsNotEmpty()
 	link: string;
@@ -21,7 +21,7 @@ export class CreateMaterialDto {
 
 export class UpdateMaterialDto {
 	@IsOptional()
-	@IsNumber()
+	// @IsNumber()
 	sessionId: number;
 
 	@IsString()
