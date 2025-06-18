@@ -1,9 +1,18 @@
-from fastapi import APIRouter, Request, jsonify
+from fastapi import APIRouter, Request, FastAPI
+
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from feedback_summary import analyze_large_feedback
 from material_feedback import analyze_session
-app = APIRouter()
+
+app = FastAPI() 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],              # or ["*"] to allow all
+    allow_credentials=True,
+    allow_methods=["*"],                # GET, POST, etc.
+    allow_headers=["*"],                # Authorization, Content-Type, etc.
+)
 
 class SessionMaterialInput(BaseModel):
     topic: str
@@ -28,7 +37,7 @@ def get_material_feedback(data: SessionMaterialInput):
 def get_session_feedback(data: FeedbackInput):
     try:
         session_feedback = analyze_large_feedback(data.comments)
-        return jsonify({"feedback": session_feedback})
+        return {"feedback": session_feedback}
     except Exception as e:
         return {"error": str(e)}
 
