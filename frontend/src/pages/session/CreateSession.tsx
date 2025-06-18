@@ -87,16 +87,14 @@ const SelectModal: React.FC<SelectModalProps> = ({
 
 const CreateSession = () => {
     const [sessionDetails, setSessionDetails] = useState({
-        program_id: 4,
-        status: "InProgress",
+        programId: 4,
         title: "s1",
         description: "desc",
-        startTime: "2020-07-10",
-        endTime: "2025-07-05",
+        date: "2020-07-10",
+        duration: 3,
     });
 
     const { trainingId } = useParams();
-    const [duration, setDuration] = useState(0);
     const navigate = useNavigate();
 
     const [showTrainerModal, setShowTrainerModal] = useState(false);
@@ -105,15 +103,6 @@ const CreateSession = () => {
     const [selectedModerators, setSelectedModerators] = useState<string[]>([]);
 
     const [createSession] = useCreateSessionMutation();
-
-    // const dummyTrainers = Array.from(
-    //     { length: 50 },
-    //     (_, i) => `Trainer ${i + 1}`
-    // );
-    // const dummyModerators = Array.from(
-    //     { length: 100 },
-    //     (_, i) => `Moderator ${i + 1}`
-    // );
 
     const handleCancel = () => {
         setSelectedTrainer([]);
@@ -147,17 +136,13 @@ const CreateSession = () => {
                     name="session-duration"
                     label="Session Duration"
                     type="integer"
-                    // value={String(sessionDetails.duration)}
-                    value={String(duration)}
+                    value={String(sessionDetails.duration)}
                     onChange={(event) =>
-                        setDuration(Number(event.target.value))
+                        setSessionDetails({
+                            ...sessionDetails,
+                            duration: Number(event.target.value),
+                        })
                     }
-                    // onChange={(event) =>
-                    //     setSessionDetails({
-                    //         ...sessionDetails,
-                    //         duration: Number(event.target.value),
-                    //     })
-                    // }
                 />
 
                 <FormInput
@@ -197,28 +182,28 @@ const CreateSession = () => {
                 </div>
 
                 {/* Trainer Modal */}
-                {/* {showTrainerModal && (
+                {showTrainerModal && (
                     <SelectModal
                         title="Select Trainer"
-                        options={dummyTrainers}
+                        options={[]}
                         selected={selectedTrainer}
                         multiSelect={false}
                         onClose={() => setShowTrainerModal(false)}
                         onSelect={setSelectedTrainer}
                     />
-                )} */}
+                )}
 
                 {/* Moderator Modal */}
-                {/* {showModeratorModal && (
+                {showModeratorModal && (
                     <SelectModal
                         title="Select Moderators"
-                        options={dummyModerators}
+                        options={[]}
                         selected={selectedModerators}
                         multiSelect={true}
                         onClose={() => setShowModeratorModal(false)}
                         onSelect={setSelectedModerators}
                     />
-                )} */}
+                )}
             </div>
         </Layout>
     );

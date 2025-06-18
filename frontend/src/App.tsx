@@ -15,6 +15,7 @@ import CreateSession from "./pages/session/CreateSession";
 import SessionDetails from "./pages/session/SessionDetails";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import UpdateSession from "./pages/session/UpdateSession";
 
 const router = createBrowserRouter([
     {
@@ -56,12 +57,16 @@ const router = createBrowserRouter([
                         element: <NotFound />,
                     },
                     {
+                        path: "create",
+                        element: <CreateSession />,
+                    },
+                    {
                         path: ":sessionId",
                         element: <SessionDetails />,
                     },
                     {
-                        path: "create",
-                        element: <CreateSession />,
+                        path: ":sessionId/update",
+                        element: <UpdateSession />,
                     },
                 ],
                 errorElement: <NotFound />,

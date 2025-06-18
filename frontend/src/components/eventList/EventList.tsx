@@ -16,9 +16,10 @@ export type EventProps = {
     id: number;
     title: string;
     description: string;
-    startDate: string;
-    endDate: string;
-    duration?: string;
+    date?: string;
+    startDate?: string;
+    endDate?: string;
+    duration?: number;
     status?: (typeof EventStatusType)[keyof typeof EventStatusType];
     trainer?: string;
     totalSessions?: number;
@@ -45,8 +46,7 @@ export const formatTrainingList = (trainingDetailsList: Array<EventProps>) => {
                 id: trainingDetails.id,
                 title: trainingDetails.title,
                 description: trainingDetails.description,
-                startDate: trainingDetails.startDate,
-                endDate: trainingDetails.endDate,
+                date: trainingDetails.date,
                 status: trainingDetails?.status,
             };
         }
@@ -78,7 +78,7 @@ const EventListItem: React.FC<EventItem> = ({ item, heading }) => {
                 <p className="text-sm mt-1 text-gray-400">{item.description}</p>
                 {heading == "session" ? (
                     <p className="text-sm mt-1">
-                        Date : {dayjs(item.startDate).format("DD/MM/YYYY")}
+                        Date : {dayjs(item.date).format("DD/MM/YYYY")}
                     </p>
                 ) : (
                     <>
