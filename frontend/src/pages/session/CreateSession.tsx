@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import Layout from "../../components/layout/Layout";
 import FormInput from "../../components/formInput/FormInput";
@@ -25,12 +25,11 @@ const SelectModal: React.FC<SelectModalProps> = ({
     onSelect,
 }) => {
     const [localSelection, setLocalSelection] = useState<string[]>(selected);
+
     const toggleOption = (option: string) => {
         if (multiSelect) {
             if (localSelection.includes(option)) {
-                setLocalSelection(
-                    localSelection.filter((item) => item !== option)
-                );
+                setLocalSelection(localSelection.filter((item) => item !== option));
             } else {
                 setLocalSelection([...localSelection, option]);
             }
@@ -43,19 +42,14 @@ const SelectModal: React.FC<SelectModalProps> = ({
         <div className="fixed inset-0 w-full h-full bg-modalBgColor flex items-center justify-center z-50">
             <div className="bg-cardColor border border-borderColor rounded-lg p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold text-white">
-                        {title}
-                    </h2>
+                    <h2 className="text-lg font-semibold text-white">{title}</h2>
                     <Button onClick={onClose}>
                         <X className="text-gray-300 hover:text-white" />
                     </Button>
                 </div>
                 <div className="space-y-2">
                     {options.map((option) => (
-                        <label
-                            key={option}
-                            className="flex items-center gap-2 text-white"
-                        >
+                        <label key={option} className="flex items-center gap-2 text-white">
                             <input
                                 type={multiSelect ? "checkbox" : "radio"}
                                 checked={localSelection.includes(option)}
@@ -88,10 +82,10 @@ const SelectModal: React.FC<SelectModalProps> = ({
 const CreateSession = () => {
     const [sessionDetails, setSessionDetails] = useState({
         programId: 4,
-        title: "s1",
-        description: "desc",
-        date: "2020-07-10",
-        duration: 3,
+        title: "",
+        description: "",
+        date: "",
+        duration: 0,
     });
 
     const { trainingId } = useParams();
@@ -104,88 +98,170 @@ const CreateSession = () => {
 
     const [createSession, { isLoading }] = useCreateSessionMutation();
 
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    const validateForm = () => {
+        const newErrors: { [key: string]: string } = {};
+
+        if (!sessionDetails.title.trim()) {
+            newErrors.title = "Title is required.";
+        } else if (sessionDetails.title.trim().length < 3) {
+            newErrors.title = "Title must be at least 3 characters.";
+        }
+
+        if (!sessionDetails.description.trim()) {
+            newErrors.description = "Description is required.";
+        } else if (sessionDetails.description.trim().length < 10) {
+            newErrors.description = "Description must be at least 10 characters.";
+        }
+
+        if (sessionDetails.duration <= 0) {
+            newErrors.duration = "Duration is required.";
+        }
+
+        if (selectedTrainer.length !== 1) {
+            newErrors.trainer = "Please select one trainer.";
+        }
+
+        return newErrors;
+    };
+
+
+    const handleSubmit = () => {
+        const validationErrors = validateForm();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        setErrors({});
+
+        createSession(sessionDetails)
+            .unwrap()
+            .then((data) => {
+                console.log(data);
+                navigate(`/training/${trainingId}`);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     const handleCancel = () => {
         setSelectedTrainer([]);
         setSelectedModerators([]);
-    };
-
-    const handleSubmit = () => {
-        createSession(sessionDetails)
-            .unwrap()
-            .then((data) => console.log(data))
-            .catch((error) => console.log(error));
-        navigate(`/training/${trainingId}`);
+        setSessionDetails({
+            programId: 4,
+            title: "",
+            description: "",
+            date: "",
+            duration: 0,
+        });
+        setErrors({});
+        navigate(-1);
     };
 
     return (
         <Layout title="Session Details Form" isLoading={isLoading}>
             <div className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded">
-                <FormInput
-                    name="session-name"
-                    label="Session Name"
-                    value={sessionDetails.title}
-                    onChange={(event) =>
-                        setSessionDetails({
-                            ...sessionDetails,
-                            title: event.target.value,
-                        })
-                    }
-                />
+                <div>
+                    <FormInput
+                        name="session-name"
+                        label="Session Name"
+                        value={sessionDetails.title}
+                        onChange={(event) =>
+                            setSessionDetails({
+                                ...sessionDetails,
+                                title: event.target.value,
+                            })
+                        }
+                    />
+                    {errors.title && (
+                        <div className="text-red-500 text-sm mt-1">
+                            {errors.title}
+                        </div>
+                    )}
+                </div>
 
-                <FormInput
-                    name="session-duration"
-                    label="Session Duration"
-                    type="integer"
-                    value={String(sessionDetails.duration)}
-                    onChange={(event) =>
-                        setSessionDetails({
-                            ...sessionDetails,
-                            duration: Number(event.target.value),
-                        })
-                    }
-                />
+                <div>
+                    <FormInput
+                        name="session-duration"
+                        label="Session Duration"
+                        type="number"
+                        value={String(sessionDetails.duration)}
+                        onChange={(event) =>
+                            setSessionDetails({
+                                ...sessionDetails,
+                                duration: Number(event.target.value),
+                            })
+                        }
+                    />
+                    {errors.duration && (
+                        <div className="text-red-500 text-sm mt-1">
+                            {errors.duration}
+                        </div>
+                    )}
+                </div>
 
-                <FormInput
-                    name="session-description"
-                    label="Session Description"
-                    type="textarea"
-                    value={sessionDetails.description}
-                    onChange={(event) =>
-                        setSessionDetails({
-                            ...sessionDetails,
-                            description: event.target.value,
-                        })
-                    }
-                />
+
+                <div>
+                    <FormInput
+                        name="session-description"
+                        label="Session Description"
+                        type="textarea"
+                        value={sessionDetails.description}
+                        onChange={(event) =>
+                            setSessionDetails({
+                                ...sessionDetails,
+                                description: event.target.value,
+                            })
+                        }
+                    />
+                    {errors.description && (
+                        <div className="text-red-500 text-sm mt-1">
+                            {errors.description}
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    <ActionButton
+                        label={
+                            selectedTrainer.length
+                                ? `Trainer: ${selectedTrainer[0]}`
+                                : "Add trainer"
+                        }
+                        onClick={() => setShowTrainerModal(true)}
+                    />
+                    {errors.trainer && (
+                        <div className="text-red-500 text-sm mt-1">
+                            {errors.trainer}
+                        </div>
+                    )}
+                </div>
 
                 <ActionButton
-                    label="Add trainer"
-                    onClick={() => setShowTrainerModal(true)}
-                />
-
-                <ActionButton
-                    label="Add moderators"
+                    label={
+                        selectedModerators.length
+                            ? `Moderators: ${selectedModerators.join(", ")}`
+                            : "Add moderators"
+                    }
                     onClick={() => setShowModeratorModal(true)}
                 />
 
-                {/* Buttons */}
                 <div className="flex justify-end gap-4">
                     <Button variant={ButtonType.PRIMARY} onClick={handleSubmit}>
                         Submit
                     </Button>
-                    <Button
-                        variant={ButtonType.SECONDARY}
-                        onClick={handleCancel}
-                    >
+                    <Button variant={ButtonType.SECONDARY} onClick={handleCancel}>
                         Cancel
                     </Button>
                 </div>
 
-                {/* Trainer Modal */}
                 {showTrainerModal && (
                     <SelectModal
                         title="Select Trainer"
-                        options={[]}
+                        options={["Trainer A", "Trainer B"]} // Replace with real options
                         selected={selectedTrainer}
                         multiSelect={false}
                         onClose={() => setShowTrainerModal(false)}
@@ -193,11 +269,10 @@ const CreateSession = () => {
                     />
                 )}
 
-                {/* Moderator Modal */}
                 {showModeratorModal && (
                     <SelectModal
                         title="Select Moderators"
-                        options={[]}
+                        options={["Moderator X", "Moderator Y", "Moderator Z"]} // Replace with real options
                         selected={selectedModerators}
                         multiSelect={true}
                         onClose={() => setShowModeratorModal(false)}
@@ -208,4 +283,5 @@ const CreateSession = () => {
         </Layout>
     );
 };
+
 export default CreateSession;
