@@ -5,6 +5,7 @@ import { CreateMaterialDto, UpdateMaterialDto } from "../dto/material.dto";
 import { MaterialRepository } from "../repositories/material.repository";
 import { Material } from "../entities/material.entity";
 import { SessionService } from "./session.service";
+import { ENABLE_AI } from "../utils/constants";
 
 export class MaterialService {
 	private logger = LoggerService.getInstance("MaterialService()");
@@ -23,6 +24,23 @@ export class MaterialService {
 		);
 		const result = await this.materialRepository.create(material);
 		this.logger.info(`Material created with ID: ${result.id}`);
+
+		const session = await this.sessionService.findOneById(
+			materialDto.sessionId
+		);
+		const materials = session.materials;
+		if (ENABLE_AI) {
+			const materialList = (await materials).map(
+				(material) => material.link
+			);
+			this.logger.info("Materials:" + materialList);
+			await this.sessionService.updateAiFeedbackAboutMaterials(
+				session.id,
+				session.title,
+				session.description,
+				materialList
+			);
+		}
 		return result;
 	}
 	async findAllMaterial(): Promise<Material[]> {
