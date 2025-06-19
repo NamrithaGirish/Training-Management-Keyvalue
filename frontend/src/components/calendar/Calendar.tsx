@@ -41,10 +41,29 @@ const DraggableSession = ({
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "SESSION",
     item: { ...session, fromCalendar, calendarIndex: index, dateKey },
+    canDrag: session.status.toLowerCase() === "draft",
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
+
+  if (!fromCalendar) {
+    return (
+      <div
+        ref={drag}
+        className={`${session.color} text-white text-lg px-2 py-1 rounded mb-2 cursor-move shadow overflow-hidden ${className}`}
+        style={{ opacity: isDragging ? 0.5 : 1 }}
+      >
+        {session.title}
+        <div>
+          {session.description && (
+            <span className="text-sm">{session.description}</span>
+          )}
+        </div>
+        <span className="text-sm text-gray-200">{session.duration} Hrs</span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -185,7 +204,10 @@ const Calendar = () => {
   const coloredSessions = (trainingDetails?.sessions || []).map(
     (session: any, idx: number) => ({
       ...session,
-      color: session.color || colorClasses[session.id % colorClasses.length],
+      color:
+        session.status !== "Draft"
+          ? "bg-gray-500"
+          : colorClasses[idx % colorClasses.length],
     })
   );
 
@@ -306,7 +328,9 @@ const Calendar = () => {
         )
         .flat(),
     ];
-    updateMultipleSessions({ sessions: payload })
+    updateMultipleSessions({
+      sessions: payload.map((s) => ({ ...s, status: "Scheduled" })),
+    })
       .unwrap()
       .then((x) => {
         console.log("Schedule updated successfully", x);
