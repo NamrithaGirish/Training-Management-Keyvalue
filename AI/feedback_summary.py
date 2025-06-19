@@ -56,14 +56,7 @@ You are an expert educational analyst.
 Here is the summary of student feedback about a session:
 {student_summary}
 
-Here is the summary of trainers and moderators feedback about a student:
-{trainer_summary}
-
-Please provide:
-
-1. An integrated analysis highlighting the overall perfomance of trainers and the quality of sessions.
-2. For each student analyze the feedback given by trainers and moderators and give analysis on how the student can improve where his weakness and strength lies.
-"""
+Please provide:An integrated analysis highlighting the overall perfomance of trainers and the quality of sessions in less than 100 words."""
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
@@ -74,27 +67,13 @@ Please provide:
 
 # Putting it all together
 
-def analyze_large_feedback(student_feedback, trainer_moderator_feedback):
+def analyze_large_feedback(student_feedback):
     student_summary = hierarchical_summarize(student_feedback, "student")
-    trainer_summary = hierarchical_summarize(trainer_moderator_feedback, "trainer and moderator")
-
-    final_report = final_combined_analysis(student_summary, trainer_summary)
-    return final_report
+    return student_summary
 
 
 # Example usage
 
-student_feedback = [
-    # large list of student feedback strings
-    'The session was great',
-    'The session was fun.'
-]
 
-trainer_moderator_feedback = [
-    # large list of trainer/mod feedback strings
-    'The student was great'
-    'The student was an idiot'
-]
-
-report = analyze_large_feedback(student_feedback, trainer_moderator_feedback)
-print(report)
+# report = analyze_large_feedback(student_feedback, trainer_moderator_feedback)
+# print(report)

@@ -30,7 +30,7 @@ Provide a concise evaluation focusing on:
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "You are a professional training material evaluator AI. Focus strictly on analyzing the uploaded material and give improvement suggestions."},
+            {"role": "system", "content": "You are a professional training material evaluator AI. Focus strictly on analyzing the uploaded material and give improvement suggestions.Limit yourself to 100 words"},
             {"role": "user", "content": prompt}
         ],
         temperature=0.4,

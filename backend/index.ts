@@ -39,7 +39,6 @@ server.use("/material", materialRouter);
 server.use("/trainings", trainingRouter);
 server.use("/feedback", feedbackRouter);
 server.use("/assignments", assignmentRouter);
-
 server.use("/analytics", analyticsRouter);
 server.use(errorMiddleware);
 

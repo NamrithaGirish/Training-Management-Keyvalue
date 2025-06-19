@@ -1,12 +1,20 @@
 import SessionRepository from "../repositories/session.repository";
 import { Session, Status } from "../entities/session.entity";
 import { instanceToPlain, plainToInstance } from "class-transformer";
-import { CreateSessionDto, CreateSessionsDto, UpdateSessionDto, UpdateSessionsDto } from "../dto/session.dto";
+import {
+	CreateSessionDto,
+	CreateSessionsDto,
+	UpdateSessionDto,
+	UpdateSessionsDto,
+} from "../dto/session.dto";
 import LoggerService from "./logger.service";
 import HTTPException from "../exceptions/http.exception";
 import { UserSessionRepository } from "../repositories/user-session.repository";
-import { CreateUserSessionDto, DeleteUserSessionDto } from "../dto/user-session.dto";
-import {  UserSession } from "../entities/user-session.entity";
+import {
+	CreateUserSessionDto,
+	DeleteUserSessionDto,
+} from "../dto/user-session.dto";
+import { UserSession } from "../entities/user-session.entity";
 import UserRepository from "../repositories/user.repository";
 import UserService from "./user.service";
 import TrainingService from "./training.service";
@@ -14,7 +22,7 @@ import { error } from "console";
 
 import { Role } from "../entities/training-users.entity";
 import { userService } from "../routes/user.route";
-
+import { FASTAPI_URL } from "../utils/constants";
 
 export class SessionService {
 	private logger = LoggerService.getInstance("UserService()");
@@ -24,103 +32,123 @@ export class SessionService {
 		private userSessionRepository: UserSessionRepository
 	) {}
 
-  async createSession(sessionDto: CreateSessionDto): Promise<Session> {
-    const session = plainToInstance(Session, instanceToPlain(sessionDto));
-    const training = await this.trainingService.getTrainingById(sessionDto.programId);
-    if (training) {
-      session.training = training;
-    } else {
-      throw new HTTPException(400, "No such training");
-    }
-    const result = await this.sessionRepository.create(session);
-    this.logger.info(`Session created with ID: ${result.id}`);
+	async createSession(sessionDto: CreateSessionDto): Promise<Session> {
+		const session = plainToInstance(Session, instanceToPlain(sessionDto));
+		const training = await this.trainingService.getTrainingById(
+			sessionDto.programId
+		);
+		if (training) {
+			session.training = training;
+		} else {
+			throw new HTTPException(400, "No such training");
+		}
+		const result = await this.sessionRepository.create(session);
+		this.logger.info(`Session created with ID: ${result.id}`);
 
 		return result;
 	}
-  async updateSessions(sessionsDto: UpdateSessionsDto): Promise<Session[]> {
-  if (!sessionsDto.sessions.length) {
-    throw new HTTPException(400, 'No session data provided');
-  }
-   console.log("helloooo1");
-   const programId = sessionsDto.sessions[0].programId;
-console.log("helllooo2");
-    // Check that all sessions belong to the same training
-    const allSameTraining = sessionsDto.sessions.every(dto => dto.programId === programId);
-    if (!allSameTraining) {
-      throw new HTTPException(400, 'All sessions must belong to the same training (programId)');
-    }
+	async updateSessions(sessionsDto: UpdateSessionsDto): Promise<Session[]> {
+		if (!sessionsDto.sessions.length) {
+			throw new HTTPException(400, "No session data provided");
+		}
+		console.log("helloooo1");
+		const programId = sessionsDto.sessions[0].programId;
+		console.log("helllooo2");
+		// Check that all sessions belong to the same training
+		const allSameTraining = sessionsDto.sessions.every(
+			(dto) => dto.programId === programId
+		);
+		if (!allSameTraining) {
+			throw new HTTPException(
+				400,
+				"All sessions must belong to the same training (programId)"
+			);
+		}
 
-    const training = await this.trainingService.getTrainingById(programId)
+		const training = await this.trainingService.getTrainingById(programId);
 
-    if (!training) {
-      throw new HTTPException(404, `Training with ID ${programId} not found`);
-    }
+		if (!training) {
+			throw new HTTPException(
+				404,
+				`Training with ID ${programId} not found`
+			);
+		}
 
-  // Create session entities with the training assigned
-  const sessionsToUpdate= sessionsDto.sessions.map(dto =>
-    ({
-      id:dto.id,
-      title: dto.title?dto.title:undefined,
-      date:dto.date,
-      slot:dto.slot,
-      description: dto.description,
-      preReq: dto.preReq,
-      status: dto.status ,
-      duration: dto.duration,
-      training: training,
-    })
-  );
+		// Create session entities with the training assigned
+		const sessionsToUpdate = sessionsDto.sessions.map((dto) => ({
+			id: dto.id,
+			title: dto.title ? dto.title : undefined,
+			date: dto.date,
+			slot: dto.slot,
+			description: dto.description,
+			preReq: dto.preReq,
+			status: dto.status,
+			duration: dto.duration,
+			training: training,
+		}));
 
-  const savedSessions = await this.sessionRepository.updateSessions(sessionsToUpdate);
+		const savedSessions = await this.sessionRepository.updateSessions(
+			sessionsToUpdate
+		);
 
-  savedSessions.forEach(s =>
-    this.logger.info(`Created session '${s.title}' under training ${training.id}`)
-  );
+		savedSessions.forEach((s) =>
+			this.logger.info(
+				`Created session '${s.title}' under training ${training.id}`
+			)
+		);
 
-  return savedSessions;
-}
+		return savedSessions;
+	}
 
-  async createSessions(sessionsDto: CreateSessionsDto): Promise<Session[]> {
-  if (!sessionsDto.sessions.length) {
-    throw new HTTPException(400, 'No session data provided');
-  }
+	async createSessions(sessionsDto: CreateSessionsDto): Promise<Session[]> {
+		if (!sessionsDto.sessions.length) {
+			throw new HTTPException(400, "No session data provided");
+		}
 
-  const programId = sessionsDto[0].programId;
+		const programId = sessionsDto[0].programId;
 
-  // Check that all sessions belong to the same training
-  const allSameTraining = sessionsDto.sessions.every(dto => dto.programId === programId);
-  if (!allSameTraining) {
-    throw new HTTPException(400, 'All sessions must belong to the same training (programId)');
-  }
+		// Check that all sessions belong to the same training
+		const allSameTraining = sessionsDto.sessions.every(
+			(dto) => dto.programId === programId
+		);
+		if (!allSameTraining) {
+			throw new HTTPException(
+				400,
+				"All sessions must belong to the same training (programId)"
+			);
+		}
 
-  const training = await this.trainingService.getTrainingById(programId)
+		const training = await this.trainingService.getTrainingById(programId);
 
-  if (!training) {
-    throw new HTTPException(404, `Training with ID ${programId} not found`);
-  }
+		if (!training) {
+			throw new HTTPException(
+				404,
+				`Training with ID ${programId} not found`
+			);
+		}
 
-  // Create session entities with the training assigned
-  const sessionsToCreate= sessionsDto.sessions.map(dto =>
-    ({
-      title: dto.title,
-      description: dto.description,
-      preReq: dto.preReq,
-      status: dto.status ,
-      duration: dto.duration,
-      training: training,
-    })
-  );
+		// Create session entities with the training assigned
+		const sessionsToCreate = sessionsDto.sessions.map((dto) => ({
+			title: dto.title,
+			description: dto.description,
+			preReq: dto.preReq,
+			status: dto.status,
+			duration: dto.duration,
+			training: training,
+		}));
 
-  const savedSessions = await this.sessionRepository.createSessions(sessionsToCreate);
+		const savedSessions = await this.sessionRepository.createSessions(
+			sessionsToCreate
+		);
 
-  savedSessions.forEach(s =>
-    this.logger.info(`Created session '${s.title}' under training ${training.id}`)
-  );
+		savedSessions.forEach((s) =>
+			this.logger.info(
+				`Created session '${s.title}' under training ${training.id}`
+			)
+		);
 
-  return savedSessions;
-}
-
-
+		return savedSessions;
+	}
 
 	async findAllSessions(): Promise<Session[]> {
 		const sessions = await this.sessionRepository.findAll();
@@ -136,8 +164,11 @@ console.log("helllooo2");
 		return sessions;
 	}
 
-  async findRoleInSession(sessionId: number,userId:number): Promise<Role> {
-		const role = await this.userSessionRepository.getUserRoleInSession(sessionId,userId);
+	async findRoleInSession(sessionId: number, userId: number): Promise<Role> {
+		const role = await this.userSessionRepository.getUserRoleInSession(
+			sessionId,
+			userId
+		);
 		if (!role) {
 			throw new HTTPException(404, "User not found in Session");
 		}
@@ -236,5 +267,36 @@ console.log("helllooo2");
 		}
 		const sessions = await this.sessionRepository.findByUserId(userId);
 		return sessions;
+	}
+
+	async updateAiFeedbackForSession(sessionId: number, comments: string[]) {
+		const response = await fetch(`${FASTAPI_URL}/session-feedback`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				comments: comments,
+			}),
+		});
+		const sessionFeedback = await response.json();
+		this.sessionRepository.update(sessionId, sessionFeedback);
+	}
+
+	async updateAiFeedbackAboutMaterials(
+		sessionId: number,
+		title: string,
+		description: string,
+		listOfMaterials: string[]
+	) {
+		const response = await fetch(`${FASTAPI_URL}/material-feedback`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				title: title,
+				description: description,
+				list_of_materials: listOfMaterials,
+			}),
+		});
+		const sessionFeedback = await response.json();
+		this.sessionRepository.update(sessionId, sessionFeedback);
 	}
 }

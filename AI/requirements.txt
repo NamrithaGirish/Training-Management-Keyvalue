@@ -11,3 +11,6 @@ webdriver-manager
 readability-lxml
 python-dotenv
 pillow
+fastapi
+uvicorn
+gunicorn
