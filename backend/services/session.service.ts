@@ -20,7 +20,7 @@ import UserService from "./user.service";
 import TrainingService from "./training.service";
 import { error } from "console";
 
-import { Role } from "../entities/training-users.entity";
+import { Role, TrainingUser } from "../entities/training-users.entity";
 import { userService } from "../routes/user.route";
 import { FASTAPI_URL } from "../utils/constants";
 
@@ -42,7 +42,18 @@ export class SessionService {
 		} else {
 			throw new HTTPException(400, "No such training");
 		}
+		const userSessions: UserSession[] = [];
+		training.members.forEach(async (member: TrainingUser) => {
+			if (member.role === Role.CANDIDATE) {
+				const userSession = new UserSession();
+				userSession.user = member.user;
+				userSession.role = member.role;
+				userSessions.push(userSession);
+			}
+		});
+		session.userSessions = userSessions;
 		const result = await this.sessionRepository.create(session);
+
 		this.logger.info(`Session created with ID: ${result.id}`);
 
 		return result;
@@ -104,8 +115,7 @@ export class SessionService {
 		if (!sessionsDto.sessions.length) {
 			throw new HTTPException(400, "No session data provided");
 		}
-
-		const programId = sessionsDto[0].programId;
+		const programId = sessionsDto.sessions[0].programId;
 
 		// Check that all sessions belong to the same training
 		const allSameTraining = sessionsDto.sessions.every(
@@ -141,11 +151,33 @@ export class SessionService {
 			sessionsToCreate
 		);
 
-		savedSessions.forEach((s) =>
+		// const candidates = training.members.map((member: TrainingUser) => {
+		// 	if (member.role === Role.CANDIDATE){
+		// 		const userSession = new UserSession();
+		// 	userSession.user = member.user;
+		// 	userSession.session = ; // Assuming you want to add all users to
+		// 	return use;
+		// 	}
+
+		// });
+
+		savedSessions.forEach(async (s) => {
 			this.logger.info(
 				`Created session '${s.title}' under training ${training.id}`
-			)
-		);
+			);
+			// Add userSessions to each session 's'
+			const userSessions: UserSession[] = [];
+			training.members.forEach(async (member: TrainingUser) => {
+				if (member.role === Role.CANDIDATE) {
+					const userSession = new UserSession();
+					userSession.user = member.user;
+					userSession.session = s;
+					userSessions.push(userSession);
+				}
+			});
+			s.userSessions = userSessions;
+			await this.sessionRepository.update(s.id, s);
+		});
 
 		return savedSessions;
 	}

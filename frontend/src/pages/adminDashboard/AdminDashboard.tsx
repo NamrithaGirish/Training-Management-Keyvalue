@@ -22,7 +22,6 @@ const AdminDashboard = () => {
                     ]}
                 />
                 <EventList
-                    isAdmin={true}
                     heading="Trainings"
                     showCreateButton={true}
                     onCreateClick={() => navigate("/training/create")}

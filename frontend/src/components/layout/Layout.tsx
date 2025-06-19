@@ -32,7 +32,7 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
     return (
         <div className="flex flex-col min-h-screen bg-bgColor">
-            <ToastContainer />
+            <ToastContainer toastClassName="custom-toast" />
             <Header title={title} endAdornments={endAdornments} />
             <Navbar />
             <div className="flex mt-headerHeight">
