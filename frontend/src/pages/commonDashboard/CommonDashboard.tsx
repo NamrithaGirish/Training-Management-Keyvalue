@@ -22,11 +22,9 @@ const CommonDashboard = () => {
                     ]}
                 />
                 <EventList
-
                     heading="Trainings"
                     showCreateButton={false}
                     data={formatTrainingList(userDashboardData?.totalPrograms)}
-
                 />
             </div>
         </Layout>

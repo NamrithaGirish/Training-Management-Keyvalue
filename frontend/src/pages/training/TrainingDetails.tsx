@@ -18,25 +18,24 @@ const TrainingDetails = () => {
     const { trainingId } = useParams();
     const navigate = useNavigate();
 
-    const { data: trainingDetails } = useGetTrainingByIdQuery({
+    const { data: trainingDetails, isLoading } = useGetTrainingByIdQuery({
         id: trainingId,
     });
 
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     const decoded: { isAdmin: boolean }  = jwtDecode(token || "");
     const isAdmin = decoded.isAdmin;
-
 
     const [deleteTraining] = useDeleteTrainingMutation();
     useEffect(() => {
         console.log(trainingDetails);
     }, [trainingDetails]);
 
-    if (!trainingDetails) return <></>;
 
     return (
         <Layout
-            title={trainingDetails.title}
+            title={trainingDetails?.title || "Training"}
+            isLoading={isLoading || !trainingDetails}
             endAdornments={
                 isAdmin && (
                     <div className="flex gap-3">
@@ -79,11 +78,10 @@ const TrainingDetails = () => {
                     endDate="2023-10-31"
                 />
                 <EventList
-                    isAdmin={isAdmin}
                     heading="Sessions"
                     showCreateButton={isAdmin}
                     onCreateClick={() => navigate("session/create")}
-                    data={formatTrainingList(trainingDetails.sessions)}
+                    data={formatTrainingList(trainingDetails?.sessions)}
                 />
             </div>
         </Layout>

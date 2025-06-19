@@ -103,6 +103,7 @@ const UpdateSession = () => {
 
     const [updateSession, { isLoading }] = useUpdateSessionMutation();
 
+
     useEffect(() => {
         if (sessionDetailsData) {
             setSessionDetails({
@@ -130,8 +131,8 @@ const UpdateSession = () => {
             newErrors.trainer = "Please select one trainer.";
         }
         return newErrors;
-    };
 
+   
     const handleSubmit = () => {
         const validationErrors = validateForm();
         if (Object.keys(validationErrors).length > 0) {
@@ -155,6 +156,7 @@ const UpdateSession = () => {
     return (
         <Layout title="Update Session" isLoading={isLoading}>
             <div className="flex flex-col w-full gap-6 mb-6 bg-cardColor border border-borderColor p-4 rounded">
+
                 <div>
                     <FormInput
                         name="session-name"
