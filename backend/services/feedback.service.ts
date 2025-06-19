@@ -43,6 +43,21 @@ export class FeedbackService {
 		feedback.rating = createFeedbackDto.rating;
 		feedback.comments = createFeedbackDto.comments;
 		feedback.type = createFeedbackDto.type;
+		const feedbacks = await this.getFeedbackBySessionAndType(
+			FeedbackType.ABOUT_TRAINER,
+			session.id
+		);
+		if (ENABLE_AI) {
+			const comments = (await feedbacks).map(
+				(feedback) => feedback.comments
+			);
+			this.logger.info("Comments:" + comments);
+			console.log(comments)
+			await sessionService.updateAiFeedbackForSession(
+				session.id,
+				comments
+			);
+		}
 		return this.feedbackRepository.create(feedback);
 	}
 
@@ -133,16 +148,17 @@ export class FeedbackService {
 			type,
 			sessionId
 		);
-		if (ENABLE_AI) {
-			const comments = (await feedbacks).map(
-				(feedback) => feedback.comments
-			);
-			this.logger.info("Comments:" + comments);
-			await sessionService.updateAiFeedbackForSession(
-				sessionId,
-				comments
-			);
-		}
+		// if (ENABLE_AI) {
+		// 	const comments = (await feedbacks).map(
+		// 		(feedback) => feedback.comments
+		// 	);
+		// 	this.logger.info("Comments:" + comments);
+		// 	console.log(comments);
+		// 	await sessionService.updateAiFeedbackForSession(
+		// 		sessionId,
+		// 		comments
+		// 	);
+		// }
 
 		return feedbacks;
 	}
