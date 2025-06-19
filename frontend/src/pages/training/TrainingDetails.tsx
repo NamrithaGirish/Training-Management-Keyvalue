@@ -18,7 +18,7 @@ const TrainingDetails = () => {
     const { trainingId } = useParams();
     const navigate = useNavigate();
 
-    const { data: trainingDetails } = useGetTrainingByIdQuery({
+    const { data: trainingDetails, isLoading } = useGetTrainingByIdQuery({
         id: trainingId,
     });
 
@@ -31,11 +31,11 @@ const TrainingDetails = () => {
         console.log(trainingDetails);
     }, [trainingDetails]);
 
-    if (!trainingDetails) return <></>;
 
     return (
         <Layout
-            title={trainingDetails.title}
+            title={trainingDetails?.title || "Training"}
+            isLoading={isLoading || !trainingDetails}
             endAdornments={
                 isAdmin && (
                     <div className="flex gap-3">
@@ -81,7 +81,7 @@ const TrainingDetails = () => {
                     heading="Sessions"
                     showCreateButton={isAdmin}
                     onCreateClick={() => navigate("session/create")}
-                    data={formatTrainingList(trainingDetails.sessions)}
+                    data={formatTrainingList(trainingDetails?.sessions)}
                 />
             </div>
         </Layout>

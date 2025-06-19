@@ -8,6 +8,7 @@ import type { CandidateData } from "./CandidateListModal";
 interface FeedbackModalProps {
     sessionId: number;
     userRole: UserRole;
+    trainerId?: number;
     isOpen: boolean;
     onClose: () => void;
     candidate?: CandidateData;
@@ -16,6 +17,7 @@ interface FeedbackModalProps {
 export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     sessionId,
     userRole,
+    trainerId,
     isOpen,
     onClose,
     candidate,
@@ -33,14 +35,16 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     const userId = decoded.id;
 
     const handleSubmit = () => {
+        const isCandidate: boolean = userRole == UserRoleType.CANDIDATE;
+        
         createFeedback({
             comments: feedback,
             rating: rating * 2, // Mapping 1-5 stars to a rating (0-10)
             fromId: userId,
-            toId: candidate ? candidate.id : 1,
+            toId: (isCandidate ? candidate?.id : trainerId) || 0,
             sessionId: sessionId,
             type:
-                userRole == UserRoleType.CANDIDATE
+                isCandidate
                     ? "aboutTrainer"
                     : "aboutCandidate",
         })

@@ -122,7 +122,7 @@ const LoginForm = () => {
             })
             .catch((error) => {
                 setSigninData({ username: "", password: "" });
-                toast(`Error: ${error.data.error || "Something went wrong"}`);
+                toast.error(`Error: ${error.data.error || "Something went wrong"}`,  { autoClose: 2000 });
             });
     };
 

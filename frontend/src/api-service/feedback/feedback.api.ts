@@ -8,15 +8,24 @@ export const feedbackApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
         }),
+        getFeedbacksBySessionId: builder.query({
+            query: (payload) => ({
+                url: `/feedback/session/${payload.sessionId}`,
+                method: "GET",
+            }),
+        }),
         createFeedback: builder.mutation({
             query: (payload) => ({
                 url: "/feedback",
                 method: "POST",
-                body: payload
+                body: payload,
             }),
         }),
-        
     }),
 });
 
-export const { useGetFeedbackListQuery, useCreateFeedbackMutation } = feedbackApi;
+export const {
+    useGetFeedbackListQuery,
+    useGetFeedbacksBySessionIdQuery,
+    useCreateFeedbackMutation,
+} = feedbackApi;

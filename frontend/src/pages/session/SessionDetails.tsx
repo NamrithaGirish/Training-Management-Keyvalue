@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { SessionContent } from "./components/SessionContent";
 import { SessionActionButtons } from "./components/SessionActionButtons";
 
-import { type SessionData, UserRoleType } from "./components/sessionTypes";
+import {
+    type SessionData,
+    type UserRole,
+    UserRoleType,
+} from "./components/sessionTypes";
 import Layout from "../../components/layout/Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -12,12 +16,14 @@ import {
 import Button, { ButtonType } from "../../components/button/Button";
 import { jwtDecode } from "jwt-decode";
 import { useGetUserRoleInSessionQuery } from "../../api-service/user/user.api";
-import { useGetFeedbackListQuery } from "../../api-service/feedback/feedback.api";
+import { useGetFeedbacksBySessionIdQuery } from "../../api-service/feedback/feedback.api";
 
 const SessionDetails = () => {
     const [sessionDetails, setSessionDetails] = useState<SessionData>({
         description: "",
-        userRoles: [],
+        trainer: { id: 0, name: "" },
+        moderators: [],
+        materials: [],
     });
 
     const { trainingId, sessionId } = useParams();
@@ -27,20 +33,31 @@ const SessionDetails = () => {
     });
 
     const [deleteSession, { isLoading }] = useDeleteSessionMutation();
-    const { data: feedbackList } = useGetFeedbackListQuery({});
-    const validFeedbacks =
-        feedbackList?.filter(
-            (feedback: { session: { id: number } }) =>
-                feedback.session.id === Number(sessionId)
-        ) || [];
-    console.log(feedbackList);
-    console.log();
+    const { data: feedbackList } = useGetFeedbacksBySessionIdQuery({ sessionId });
 
     useEffect(() => {
         if (!sessionDetailsData) return;
+
+        const userDetails = sessionDetailsData.userSessions.map(
+            (userSession: {
+                id: number;
+                role: UserRole;
+                user: { name: string };
+            }) => ({
+                id: userSession.id,
+                role: userSession.role,
+                name: userSession.user.name
+            })
+        );
+
+        const trainer = userDetails.filter((user: { role: UserRole }) => (user.role === UserRoleType.TRAINER))[0];
+        const moderators = userDetails.filter((user: { role: UserRole }) => (user.role === UserRoleType.MODERATOR));
+
         setSessionDetails({
             description: sessionDetailsData.description,
-            userRoles: [],
+            materials: [...(sessionDetailsData.materials || [])],
+            trainer,
+            moderators: [...moderators]
         });
     }, [sessionDetailsData]);
 
@@ -52,12 +69,12 @@ const SessionDetails = () => {
         sessionId,
     });
 
-    if (!sessionDetailsData) return <></>;
+    console.log(userRole)
 
     return (
         <Layout
-            title={sessionDetailsData.title}
-            isLoading={isLoading}
+            title={sessionDetailsData?.title || "Session Title"}
+            isLoading={isLoading || !sessionDetailsData}
             endAdornments={
                 isAdmin && (
                     <div className="flex gap-3">
@@ -88,6 +105,7 @@ const SessionDetails = () => {
                         {/* Action Buttons */}
                         <div className="pt-4">
                             <SessionActionButtons
+                                trainerId={sessionDetails.trainer?.id || 0}
                                 sessionId={Number(sessionId)}
                                 userRole={userRole}
                                 uploadMaterials={
@@ -101,14 +119,17 @@ const SessionDetails = () => {
                         </div>
                     </div>
 
-                    {validFeedbacks.length > 0 && (
+                    {isAdmin && feedbackList && feedbackList.length > 0 && (
                         <div className="border border-borderColor bg-cardColor w-full rounded-lg p-6 space-y-6">
-                            {validFeedbacks?.map(
+                            {feedbackList?.map(
                                 (
                                     feedback: { comments: string },
                                     index: number
                                 ) => (
-                                    <div key={index} className="border-b border-gray-600 pb-4">
+                                    <div
+                                        key={index}
+                                        className="border-b border-gray-600 pb-4"
+                                    >
                                         <h3 className="text-gray-400 text-sm mb-2">
                                             Feedback {index + 1}
                                         </h3>
