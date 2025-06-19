@@ -24,7 +24,32 @@ const UpdateTraining = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    updateTraining({ id: trainingId, data: trainingDetails })
+    const members = trainerPool.map((member) => ({
+      userId: member.id,
+      role: UserRoleType.TRAINER as string,
+    }));
+    members.push(
+      ...moderatorPool.map((member) => ({
+        userId: member.userId,
+        role: UserRoleType.MODERATOR,
+      }))
+    );
+    members.push(
+      ...candidatePool.map((member) => ({
+        userId: member.userId,
+        role: UserRoleType.CANDIDATE,
+      }))
+    );
+    updateTraining({
+      id: trainingId,
+      data: {
+        ...trainingDetails,
+        members: members.map((t) => ({
+          userId: t.userId,
+          role: t.role.toLowerCase(),
+        })),
+      },
+    })
       .unwrap()
       .then(() => {
         navigate(`/training/${trainingId}`);
@@ -65,12 +90,10 @@ const UpdateTraining = () => {
       description: trainingDetailsData.description,
       startDate: trainingDetailsData.startDate,
       endDate: trainingDetailsData.endDate,
-      members: trainingDetailsData.members
-        ? trainingDetailsData.members.map((member) => ({
-            ...member.user,
-            role: member.role,
-          }))
-        : [],
+      members: trainingDetailsData.members.map((member) => ({
+        userId: member.user.id,
+        role: member.role.toLowerCase(),
+      })),
     });
     if (trainingDetailsData.members) {
       setTrainerPool(

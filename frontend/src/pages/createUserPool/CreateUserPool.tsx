@@ -153,16 +153,7 @@ const CreateUserPool: React.FC<CreateUserPoolProps> = ({
   };
   return (
     <Layout title={`Create ${role} Pool`}>
-      <div className="p-4 bg-cardColor text-white rounded-md border border-borderColor">
-        <Button
-          variant={ButtonType.PRIMARY}
-          onClick={() => {
-            setPool(selectedUsers);
-            setPoolType(null);
-          }}
-        >
-          Back
-        </Button>
+      <div className="p-4 bg-cardColor text-white rounded-md border border-borderColor flex flex-col">
         <button
           onClick={() => setShowModal(true)}
           className="w-full flex justify-between items-center px-5 py-6 border border-borderColor rounded-md hover:bg-gray-700"
@@ -170,11 +161,11 @@ const CreateUserPool: React.FC<CreateUserPoolProps> = ({
           <span className="text-2xl font-semibold">Add New {role}</span>
           <span className="text-3xl">+</span>
         </button>
-        <div className="mt-4 border border-borderColor rounded-md">
+        <div className="mt-4 border border-borderColor rounded-md ">
           <div className="px-4 py-4 border-b border-borderColor text-white text-2xl">
             {role}s
           </div>
-          <div className="divide-y divide-gray-700">
+          <div className="divide-y divide-gray-700 grow overflow-y-auto max-h-[50vh]">
             {selectedUsers.length === 0 ? (
               <div className="px-4 py-8 text-center text-gray-400">
                 No {role}s added to pool
@@ -185,6 +176,17 @@ const CreateUserPool: React.FC<CreateUserPoolProps> = ({
               ))
             )}
           </div>
+        </div>
+        <div className="justify-end flex gap-4 mt-4">
+          <Button
+            variant={ButtonType.PRIMARY}
+            onClick={() => {
+              setPool(selectedUsers);
+              setPoolType(null);
+            }}
+          >
+            Back
+          </Button>
         </div>
         {showModal && (
           <AddUserModal
