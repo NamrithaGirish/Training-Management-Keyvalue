@@ -24,7 +24,7 @@ sessionRouter.get("/:id", sessionController.getSessionById.bind(sessionControlle
 sessionRouter.patch("/", sessionController.updateSessions.bind(sessionController));
 sessionRouter.patch("/:id", sessionController.updateSession.bind(sessionController));
 sessionRouter.delete("/:id", sessionController.deleteSession.bind(sessionController));
-sessionRouter.get( "/:id/roles/userId",sessionController.getRoleInSession.bind(sessionController));
+sessionRouter.get( "/:id/roles/:userId",sessionController.getRoleInSession.bind(sessionController));
 sessionRouter.post( "/:id/roles",sessionController.addUsersToSession.bind(sessionController));
 sessionRouter.delete( "/:id/roles",sessionController.removeUsersFromSession.bind(sessionController));
 sessionRouter.get("/:id", sessionController.getAllUserSessions.bind(sessionController));
