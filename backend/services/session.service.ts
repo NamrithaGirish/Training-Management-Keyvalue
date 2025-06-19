@@ -310,7 +310,9 @@ export class SessionService {
 			}),
 		});
 		const sessionFeedback = await response.json();
-		this.sessionRepository.update(sessionId, sessionFeedback);
+		this.sessionRepository.update(sessionId, {
+			sessionFeedback: sessionFeedback.feedback,
+		});
 	}
 
 	async updateAiFeedbackAboutMaterials(
@@ -319,16 +321,21 @@ export class SessionService {
 		description: string,
 		listOfMaterials: string[]
 	) {
+		console.log("list : ", listOfMaterials);
 		const response = await fetch(`${FASTAPI_URL}/material-feedback`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				title: title,
+				topic: title,
 				description: description,
-				list_of_materials: listOfMaterials,
+				list_of_urls: listOfMaterials,
 			}),
 		});
-		const sessionFeedback = await response.json();
-		this.sessionRepository.update(sessionId, sessionFeedback);
+		const materialQualityFeedback = await response.json();
+		console.log("materials : ", materialQualityFeedback);
+
+		this.sessionRepository.update(sessionId, {
+			materialQualityFeedback: materialQualityFeedback.feedback,
+		});
 	}
 }
