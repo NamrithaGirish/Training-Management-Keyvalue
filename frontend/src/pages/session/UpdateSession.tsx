@@ -119,7 +119,6 @@ const UpdateSession = () => {
     const [selectedModerators, setSelectedModerators] = useState<string[]>([]);
 
     const [updateSession, { isLoading }] = useUpdateSessionMutation();
-
     const handleCancel = () => {
         setSelectedTrainer([]);
         setSelectedModerators([]);
@@ -147,7 +146,6 @@ const UpdateSession = () => {
                         })
                     }
                 />
-
                 <FormInput
                     name="session-duration"
                     label="Session Duration"

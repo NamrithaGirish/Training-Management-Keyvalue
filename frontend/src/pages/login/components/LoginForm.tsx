@@ -111,8 +111,9 @@ const LoginForm = () => {
                 const decoded: { id: number; isAdmin: boolean } = jwtDecode(
                     data.accessToken
                 );
+                const isAdmin = decoded.isAdmin; 
 
-                if (decoded.isAdmin) {
+                if (isAdmin) {
                     navigate("/adminDashboard");
                 } else {
                     navigate(`/dashboard/${decoded.id}`);
@@ -121,7 +122,7 @@ const LoginForm = () => {
             })
             .catch((error) => {
                 setSigninData({ username: "", password: "" });
-                toast(`Error: ${error.data.error || "Something went wrong"}`);
+                toast.error(`Error: ${error.data.error || "Something went wrong"}`,  { autoClose: 2000 });
             });
     };
 
