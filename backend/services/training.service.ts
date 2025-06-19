@@ -31,9 +31,38 @@ export default class TrainingService {
     return training;
   }
 
-  async updateTraining(id: number, trainingDto: Partial<Training>) {
-    return this.trainingRepository.updateTraining(id, trainingDto);
+  async updateTraining(
+  id: number,
+  trainingDto: Partial<Training> & {
+    members?: { userId: number; role: string }[];
   }
+) {
+  const { members = [], ...trainingData } = trainingDto;
+
+ 
+  const updatedTraining = await this.trainingRepository.updateTraining(id, trainingData);
+
+
+  const existingTraining = await this.trainingRepository.findOneById(id);
+
+  const membersToRemove = existingTraining.members
+    .filter((member) => member.role !== "admin")
+    .map((member) => ({
+      userId: member.user.id,
+      role: member.role,
+    }));
+
+  if (membersToRemove.length > 0) {
+    await this.trainingRepository.removeMembers(id, membersToRemove);
+  }
+
+  
+  if (members.length > 0) {
+    await this.trainingRepository.addMembers(id, members);
+  }
+
+  return updatedTraining;
+}
 
   async deleteTraining(id: number) {
     return this.trainingRepository.deleteTraining(id);
